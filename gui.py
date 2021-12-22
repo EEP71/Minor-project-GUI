@@ -319,7 +319,7 @@ class MainPage(tk.Frame):
 
             self.title_two.config(text="Arbitrary Waveform\n Generator")
             self.title_two.place(x=(width / 2) - (self.title_two.winfo_reqwidth() / 2) + 800, y=height/2 + 35)
-            
+
             self.swap_buttons("awg", 1)
         else:
             self.dropdown_one['values'] = ["None", "Arbitrary Waveform Generator"]
@@ -341,8 +341,19 @@ class MainPage(tk.Frame):
                 self.swap_buttons("sa", 1)
 
     def start_one(self):
+        global tool_one
+        global pico
         if self.but_one["text"] == "Start":
             self.but_one.config(background="#EA7870", text="Stop")
+            if tool_one == "sa":
+                try:
+                    fft_value = int(self.fft_size.get())
+                    sample_rate = int(self.sample_rate.get())
+                    print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_adc_sample_rate, sample_rate)}")
+                    print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_adc_capture_depth, fft_value)}")
+                except:
+                    print("VALUE IS NOT A FUCKING INT")
+
         else:
             self.but_one.config(background="#B2D3BE", text="Start")
 

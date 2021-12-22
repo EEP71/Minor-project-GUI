@@ -44,7 +44,7 @@ class SettingsSelector(Enum):
 
 
 class PicoCom:
-    
+
     """
     A class used to communicate with the Pico toolbox. Don't use the attributes to change stuff use the methods instead!
 
@@ -90,7 +90,7 @@ class PicoCom:
         self.tool_select =  ToolSelector.no_tool
         self.SA_values =    np.empty([0, 0], dtype=np.float32)
         self.scope_values = np.empty([0, 0], dtype=np.float32)
-        self.communication_speed_hz = 5 #Reading speed in HZ from the pi pico 10hz works for sure
+        self.communication_speed_hz = 10 #Reading speed in HZ from the pi pico 10hz works for sure
         self._init_pico_threads()
 
     def _init_pico_threads(self):
@@ -188,15 +188,12 @@ class PicoCom:
         self.set_tool(ToolSelector.change_settings)
         self._send_data_to_pico(ToolSelector.change_settings.value)
         self._send_data_to_pico(setting.value)
-
-        if setting == SettingsSelector.set_adc_sample_rate:
-            return "Pico toolbox confirms THIS IS FAKE NEWS THIS IT ON THE TODO LIST!!!!"
-        else:
-            self._send_data_to_pico((str(value) + '  ' ).encode())
-            try:
-                return self._get_data_from_pico().decode()
-            except:
-                return self._get_data_from_pico()
+        self._send_data_to_pico((str(value) + '\n' ).encode())
+        time.sleep(0.05)
+        try:
+            return self._get_data_from_pico().decode()
+        except:
+            return "THE PICO FAILED?!?!?!?!"
 
     def set_tool(self, tool: ToolSelector):
         """

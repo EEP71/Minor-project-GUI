@@ -147,8 +147,9 @@ class MainPage(tk.Frame):
 
         global canvas
         canvas = FigureCanvasTkAgg(fig, master=root)
-        plt.xlim(0, sa_sample_rate/2+1)
-        plt.ylim(0, 50000000000)
+        plt.xlim(0, 500000/2+1) ## THIS IS THE MAX WINDOW FOR DE INTERNAL ADC
+        # plt.xlim(0, sa_sample_rate/2+1)
+        plt.ylim(-50, 40)
         plt.xlabel('Frequency')
         plt.ylabel('Amplitude')
         plt.title('Spectrum analyser')
@@ -382,6 +383,7 @@ class MainPage(tk.Frame):
                     sa_capture_depth = int(pico.get_setting(SettingsSelector.get_adc_capture_depth))
                     print(f"MESSAGE FROM PICO: Get adc caputre depth = {sa_capture_depth}")
                     print(f"MESSAGE FROM PICO: Get adc sample rate {sa_sample_rate}")
+                    pico.set_capture_depth(sa_capture_depth)
                     pico.set_tool(ToolSelector.SA)
                 except:
                     print("VALUE IS NOT A FUCKING INT THIS TRY EXPECT SUCKS BTW CHANGE iT TO CHECK IF VALUES ARE INT NOT CHARACTERS")

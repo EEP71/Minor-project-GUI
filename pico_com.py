@@ -91,6 +91,7 @@ class PicoCom:
         self.SA_values =    np.empty([0, 0], dtype=np.float32)
         self.scope_values = np.empty([0, 0], dtype=np.float32)
         self.communication_speed_hz = 10 #Reading speed in HZ from the pi pico 10hz works for sure
+        self.capture_depth = 1
         self._init_pico_threads()
 
     def _init_pico_threads(self):
@@ -289,10 +290,24 @@ class PicoCom:
                 if (raw_data != 0):
                     decoded_data = raw_data.decode()
                     mapped_data = map(float, decoded_data.rstrip("\n").rstrip("\r").split(",")[:-1])
-                    self.SA_values = np.fromiter(mapped_data, dtype=np.float32)
+                    SA_values_array = np.fromiter(mapped_data, dtype=np.float32)
+                    self.SA_values = np.log10(np.sqrt(SA_values_array) / self.capture_depth) * 10
             except:
                 print("SOrry zal dit fixe")
 
+
+    def set_capture_depth(self, capture_depth: int):
+        """
+        Sets capture depth, important for spectrum analyzer fft plot set this for a better plot
+
+        ...
+
+        Parameters
+        ----------
+        capture_depth : int  
+            The capture depth to change after chaning capture depth in settings.
+        """
+        self.capture_depth = capture_depth
     def _lia_thread(self, e):
         "LIA thread"
         while True:

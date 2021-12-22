@@ -197,8 +197,8 @@ class MainPage(tk.Frame):
         self.direction_text.configure(foreground="#F2F4D1")
 
         dir_values = ["0", "1"]
-        self.slected_dir = StringVar()
-        self.direction = ttk.Combobox(self, width=30, textvariable = self.slected_dir, values=dir_values, state="readonly")
+        self.selected_dir = StringVar()
+        self.direction = ttk.Combobox(self, width=30, textvariable = self.selected_dir, values=dir_values, state="readonly")
 
         self.sd_text_osc = tk.Label(self, text = "Seconds per division", font = controller.paragraph_font)
         self.sd_text_osc.configure(background="#5E6073")

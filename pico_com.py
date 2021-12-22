@@ -96,10 +96,6 @@ class PicoCom:
 
     def _init_pico_threads(self):
         """ Initialize communication threads"""
-        tool_selection_thread        = threading.Thread(target=self._select_command, args=())
-        tool_selection_thread.name   = "Tool_selection_thread"
-        tool_selection_thread.daemon = True
-        tool_selection_thread.start()
 
         SA_thread        = threading.Thread(target=self._SA_thread, args=(self.SA_thread_event,))
         SA_thread.name   = "FFT_thread"
@@ -125,7 +121,7 @@ class PicoCom:
         self.AWG_thread_event.clear()
         AWG_thread.start()
 
-    def _select_command(self):
+    def _select_command(self, selector):
         """Selects the command from set_tool()
         1: Arbitrary waveform generator
         2: Lock-in amplifier
@@ -137,46 +133,45 @@ class PicoCom:
         8: Change toolbox settings
         9: Get values from toolbox
         """
-        while True:
-            if self.tool_select == ToolSelector.no_tool:
-                self._stop_all_threads()
-                self.tool_select = 0
-            elif self.tool_select == ToolSelector.AWG:
-                self._stop_all_threads()
-                self.AWG_thread_event.set()
-                self.tool_select = 0
-            elif self.tool_select == ToolSelector.LIA:
-                self._stop_all_threads()
-                self.LIA_thread_event.set()
-                self.tool_select = 0
-            elif self.tool_select == ToolSelector.SA:
-                self._stop_all_threads()
-                self.SA_thread_event.set()
-                self.tool_select = 0
-            elif self.tool_select == ToolSelector.scope:
-                self._stop_all_threads()
-                self.scope_thread_event.set()
-                self.tool_select = 0
-            elif self.tool_select == ToolSelector.AWG_and_scope:
-                self._stop_all_threads()
-                print("AWG_and_scope")
-                self.tool_select = 0
-            elif self.tool_select == ToolSelector.AWG_and_LIA:
-                self._stop_all_threads()
-                print("AWG_and_LIA")
-                self.tool_select = 0
-            elif self.tool_select == ToolSelector.AWG_and_SA:
-                self._stop_all_threads()
-                print("AWG_and_SA")
-                self.tool_select = 0
-            elif self.tool_select == ToolSelector.change_settings:
-                self._stop_all_threads()
-                self.tool_select = 0
-            elif self.tool_select == ToolSelector.toolbox_values:
-                self._stop_all_threads()
-                self.tool_select = 0
-            else:
-                pass
+        if self.tool_select == ToolSelector.no_tool:
+            self._stop_all_threads()
+            self.tool_select = 0
+        elif self.tool_select == ToolSelector.AWG:
+            self._stop_all_threads()
+            self.AWG_thread_event.set()
+            self.tool_select = 0
+        elif self.tool_select == ToolSelector.LIA:
+            self._stop_all_threads()
+            self.LIA_thread_event.set()
+            self.tool_select = 0
+        elif self.tool_select == ToolSelector.SA:
+            self._stop_all_threads()
+            self.SA_thread_event.set()
+            self.tool_select = 0
+        elif self.tool_select == ToolSelector.scope:
+            self._stop_all_threads()
+            self.scope_thread_event.set()
+            self.tool_select = 0
+        elif self.tool_select == ToolSelector.AWG_and_scope:
+            self._stop_all_threads()
+            print("AWG_and_scope")
+            self.tool_select = 0
+        elif self.tool_select == ToolSelector.AWG_and_LIA:
+            self._stop_all_threads()
+            print("AWG_and_LIA")
+            self.tool_select = 0
+        elif self.tool_select == ToolSelector.AWG_and_SA:
+            self._stop_all_threads()
+            print("AWG_and_SA")
+            self.tool_select = 0
+        elif self.tool_select == ToolSelector.change_settings:
+            self._stop_all_threads()
+            self.tool_select = 0
+        elif self.tool_select == ToolSelector.toolbox_values:
+            self._stop_all_threads()
+            self.tool_select = 0
+        else:
+            pass
 
     def set_setting(self, setting: SettingsSelector, value: int) -> str:
         """
@@ -216,6 +211,7 @@ class PicoCom:
             The setting which needs to be changed
         """
         self.tool_select = tool
+        self._select_command(self.tool_select)
 
     def get_SA_values(self) -> np.ndarray:
         """

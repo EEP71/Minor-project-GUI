@@ -2,7 +2,6 @@ import tkinter as tk
 from tkinter import Image, StringVar, ttk, font as tkfont
 from tkinter.constants import *
 
-import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 import matplotlib.animation as animation
@@ -283,7 +282,7 @@ class MainPage(tk.Frame):
 
             self.title_one.config(text="Arbitrary Waveform\n Generator")
             self.title_one.place(x=(width / 2) - (self.title_one.winfo_reqwidth() / 2) + 800, y=35)
-            
+
             self.swap_buttons("awg", 0)
         else:
             self.dropdown_two['values'] = ["None", "Arbitrary Waveform Generator"]

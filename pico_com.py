@@ -1,6 +1,5 @@
 import serial
 import time
-import sys
 import threading
 from enum import Enum
 import numpy as np

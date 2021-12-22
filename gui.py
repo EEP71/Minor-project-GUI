@@ -124,10 +124,10 @@ class MainPage(tk.Frame):
 # Graph
 
         fig = plt.figure()
+        ax = fig.add_subplot(1, 1, 1)
         line = plt.plot([],[])[0]
 
-        x = range(0,int(sa_sample_rate/2),int(sa_sample_rate/sa_capture_depth))
-
+        label = ax.text(0, 0, "HIGHEST FREQ:", ha='left', va='top', fontsize=20, color="Red")
         def init_line():
             line.set_data(0, 0)
             return (line,)
@@ -139,16 +139,18 @@ class MainPage(tk.Frame):
                 x = range(0,int(sa_sample_rate/2),int(sa_sample_rate/sa_capture_depth))
                 if (len(pico.get_SA_values()) == len(x)) and pico is not None:
                     line.set_data(x, pico.get_SA_values())
+                    highest_amp = np.argmax(pico.get_SA_values())
+                    label.set_text(f"HIGHEST FREQ: {x[highest_amp]}")
                 else:
                     line.set_data(0, 0)
             else:
                 line.set_data(0, 0)
-            return line,
+            return line, label,
 
         global canvas
         canvas = FigureCanvasTkAgg(fig, master=root)
-        plt.xlim(0, 500000/2+1) ## THIS IS THE MAX WINDOW FOR DE INTERNAL ADC
-        # plt.xlim(0, sa_sample_rate/2+1)
+        # plt.xlim(0, 500000/2+1) ## THIS IS THE MAX WINDOW FOR DE INTERNAL ADC
+        plt.xlim(0, sa_sample_rate/2+1)
         plt.ylim(-50, 40)
         plt.xlabel('Frequency')
         plt.ylabel('Amplitude')

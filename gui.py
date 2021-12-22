@@ -56,7 +56,7 @@ class MainView(tk.Frame):
             frame.grid(row=0, column=0, sticky="nesw")
             frame.configure(background="#5E6073")
             self.listing[page_name] = frame
-        
+
         self.up_frame('StartPage')
 
     def up_frame(self, page_name):
@@ -128,7 +128,7 @@ class MainPage(tk.Frame):
 
         ax = fig.add_subplot(111)
         line, = ax.plot(x, np.sin(x))
-        self.ani = animation.FuncAnimation(fig, animate, np.arange(1, 200), interval=500, blit=True)
+        self.ani = animation.FuncAnimation(fig, animate, np.arange(1, 200), interval=25, blit=True)
 
 # ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- #
 # Start tool 1

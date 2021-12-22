@@ -26,6 +26,12 @@ tool_two = ""
 root = None
 pico = None
 
+#######SPECTRUM ANALUZER GLOBALS#########
+sa_capture_depth = 1000  #This is the default value of the pico
+sa_sample_rate   = 50000 #This is the default value of the pico
+
+#########################################
+
 class MainView(tk.Frame):
     def __init__(self, pages, *args, **kwargs):
         tk.Frame.__init__(self, *args, **kwargs)
@@ -104,6 +110,8 @@ class StartPage(tk.Frame):
             canvas.get_tk_widget().place(x=0, y=0, height=1050, width=1595)
 
 class MainPage(tk.Frame):
+    global sa_capture_depth
+    global sa_sample_rate
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
@@ -115,21 +123,20 @@ class MainPage(tk.Frame):
 # ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- #
 # Graph
 
-        sample_rate = 50000
-        capture_depth = 1000
-
         fig = plt.figure()
         line = plt.plot([],[])[0]
 
-        x = range(0,int(sample_rate/2),int(sample_rate/capture_depth))
+        x = range(0,int(sa_sample_rate/2),int(sa_sample_rate/sa_capture_depth))
 
         def init_line():
             line.set_data(0, 0)
             return (line,)
 
         def animate(i):
+            global x
             global pico
             if pico is not None:
+                x = range(0,int(sa_sample_rate/2),int(sa_sample_rate/sa_capture_depth))
                 if (len(pico.get_SA_values()) == len(x)) and pico is not None:
                     line.set_data(x, pico.get_SA_values())
                 else:
@@ -140,11 +147,12 @@ class MainPage(tk.Frame):
 
         global canvas
         canvas = FigureCanvasTkAgg(fig, master=root)
-        plt.xlim(0, sample_rate/2+1)
+        plt.xlim(0, sa_sample_rate/2+1)
         plt.ylim(0, 50000000000)
         plt.xlabel('Frequency')
         plt.ylabel('Amplitude')
         plt.title('Spectrum analyser')
+        plt.autoscale(enable=True, axis='x')
         self.ani =  matplotlib.animation.FuncAnimation(fig, animate, init_func=init_line, interval=25, blit=True)
 
 # ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- #
@@ -360,6 +368,8 @@ class MainPage(tk.Frame):
     def start_one(self):
         global tool_one
         global pico
+        global sa_capture_depth
+        global sa_sample_rate
         if self.but_one["text"] == "Start":
             self.but_one.config(background="#EA7870", text="Stop")
             if tool_one == "sa":
@@ -368,9 +378,13 @@ class MainPage(tk.Frame):
                     sample_rate = int(self.sample_rate.get())
                     print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_adc_sample_rate, sample_rate)}")
                     print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_adc_capture_depth, fft_value)}")
+                    sa_sample_rate = int(pico.get_setting(SettingsSelector.get_adc_sample_rate))
+                    sa_capture_depth = int(pico.get_setting(SettingsSelector.get_adc_capture_depth))
+                    print(f"MESSAGE FROM PICO: Get adc caputre depth = {sa_capture_depth}")
+                    print(f"MESSAGE FROM PICO: Get adc sample rate {sa_sample_rate}")
                     pico.set_tool(ToolSelector.SA)
                 except:
-                    print("VALUE IS NOT A FUCKING INT")
+                    print("VALUE IS NOT A FUCKING INT THIS TRY EXPECT SUCKS BTW CHANGE iT TO CHECK IF VALUES ARE INT NOT CHARACTERS")
 
         else:
             self.but_one.config(background="#B2D3BE", text="Start")

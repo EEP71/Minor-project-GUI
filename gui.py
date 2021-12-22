@@ -3,9 +3,8 @@ from tkinter import Image, StringVar, ttk, font as tkfont
 from tkinter.constants import *
 
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from matplotlib.figure import Figure
-import matplotlib.animation as animation
-
+import matplotlib.pyplot as plt
+import matplotlib.animation
 # from PIL import ImageTk, Image
 
 import numpy as np
@@ -115,20 +114,38 @@ class MainPage(tk.Frame):
 
 # ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- #
 # Graph
-        fig = Figure()
 
-        x = np.arange(0, 2*np.pi, 0.01)        # x-array
+        sample_rate = 50000
+        capture_depth = 1000
+
+        fig = plt.figure()
+        line = plt.plot([],[])[0]
+
+        x = range(0,int(sample_rate/2),int(sample_rate/capture_depth))
+
+        def init_line():
+            line.set_data(0, 0)
+            return (line,)
 
         def animate(i):
-            line.set_ydata(np.sin(x+i/10.0))  # update the data
+            global pico
+            if pico is not None:
+                if (len(pico.get_SA_values()) == len(x)) and pico is not None:
+                    line.set_data(x, pico.get_SA_values())
+                else:
+                    line.set_data(0, 0)
+            else:
+                line.set_data(0, 0)
             return line,
 
         global canvas
         canvas = FigureCanvasTkAgg(fig, master=root)
-
-        ax = fig.add_subplot(111)
-        line, = ax.plot(x, np.sin(x))
-        self.ani = animation.FuncAnimation(fig, animate, np.arange(1, 200), interval=25, blit=True)
+        plt.xlim(0, sample_rate/2+1)
+        plt.ylim(0, 50000000000)
+        plt.xlabel('Frequency')
+        plt.ylabel('Amplitude')
+        plt.title('Spectrum analyser')
+        self.ani =  matplotlib.animation.FuncAnimation(fig, animate, init_func=init_line, interval=25, blit=True)
 
 # ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- #
 # Start tool 1
@@ -351,11 +368,13 @@ class MainPage(tk.Frame):
                     sample_rate = int(self.sample_rate.get())
                     print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_adc_sample_rate, sample_rate)}")
                     print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_adc_capture_depth, fft_value)}")
+                    pico.set_tool(ToolSelector.SA)
                 except:
                     print("VALUE IS NOT A FUCKING INT")
 
         else:
             self.but_one.config(background="#B2D3BE", text="Start")
+            pico.set_tool(ToolSelector.no_tool)
 
     def start_two(self):
         if self.but_two["text"] == "Start":

@@ -11,8 +11,11 @@ import matplotlib.animation as animation
 
 import numpy as np
 from numpy import arange, sin, pi
+from numpy.lib.function_base import select
 
 import serial.tools.list_ports
+
+from pico_com import *
 
 canvas = None
 
@@ -23,6 +26,7 @@ tool_one = ""
 tool_two = ""
 
 root = None
+pico = None
 
 class MainView(tk.Frame):
     def __init__(self, pages, *args, **kwargs):
@@ -81,7 +85,7 @@ class StartPage(tk.Frame):
 
 
         ports = serial.tools.list_ports.comports()
-        com_ports = ["COM1"]
+        com_ports = []
         for port, desc, hwid in sorted(ports):
             com_ports.append("{}".format(port))
         self.slected_com = StringVar()
@@ -94,9 +98,10 @@ class StartPage(tk.Frame):
         sub_title.place(x=(width / 2) - (sub_title.winfo_reqwidth() / 2), y=850)
 
     def check_com(self):
-        value = self.slected_com.get()
-        if value != "":
-            print(value)
+        global pico
+        selected_com = self.slected_com.get()
+        if selected_com != "":
+            pico = PicoCom(str(selected_com))
             self.controller.up_frame("MainPage")
             canvas.get_tk_widget().place(x=0, y=0, height=1050, width=1595)
 
@@ -124,7 +129,7 @@ class MainPage(tk.Frame):
 
         ax = fig.add_subplot(111)
         line, = ax.plot(x, np.sin(x))
-        self.ani = animation.FuncAnimation(fig, animate, np.arange(1, 200), interval=25, blit=False)
+        self.ani = animation.FuncAnimation(fig, animate, np.arange(1, 200), interval=500, blit=True)
 
 # ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- #
 # Start tool 1
@@ -442,6 +447,7 @@ def center(win):
     x = win.winfo_screenwidth() // 2 - win_width // 2
     y = win.winfo_screenheight() // 2 - win_height // 2
     win.geometry('{}x{}+{}+{}'.format(width, height, x, y))
+    # win.geometry(f'{width}x{height}+{x}+{y}')
     win.deiconify()
 
 def init_gui(width, height, title):

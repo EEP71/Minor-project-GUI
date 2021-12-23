@@ -39,8 +39,8 @@ class SettingsSelector(Enum):
     set_direction          = b'l'
     set_mVolt_per_DIV      = b'm'
 
-    # get_adc_capture_depth = b'n'
-    # get_adc_sample_rate =   b'o'
+    get_adc_capture_depth = b'n'
+    get_adc_sample_rate =   b'o'
 
 
 class PicoCom:
@@ -91,6 +91,7 @@ class PicoCom:
         self.SA_values =    np.empty([0, 0], dtype=np.float32)
         self.scope_values = np.empty([0, 0], dtype=np.float32)
         self.communication_speed_hz = 10 #Reading speed in HZ from the pi pico 10hz works for sure
+        self.capture_depth = 1
         self._init_pico_threads()
 
     def _init_pico_threads(self):
@@ -175,9 +176,7 @@ class PicoCom:
     def set_setting(self, setting: SettingsSelector, value: int) -> str:
         """
         Sets the given value to the given setting on the Pico Toolbox
-
         ...
-
         Parameters
         ----------
         setting : SettingsSelector
@@ -188,12 +187,46 @@ class PicoCom:
         self.set_tool(ToolSelector.change_settings)
         self._send_data_to_pico(ToolSelector.change_settings.value)
         self._send_data_to_pico(setting.value)
+        if setting == SettingsSelector.set_adc_sample_rate:
+            value = self._sample_rate_to_clock_devide(value)
         self._send_data_to_pico((str(value) + '\n' ).encode())
-        time.sleep(0.05)
+        time.sleep(0.1)
         try:
             return self._get_data_from_pico().decode()
         except:
-            return "THE PICO FAILED?!?!?!?!"
+            return self._get_data_from_pico()
+
+
+    def get_setting(self, setting: SettingsSelector) -> str:
+        """
+        Sets the given value to the given setting on the Pico Toolbox
+
+        ...
+
+        Parameters
+        ----------
+        setting : SettingsSelector
+            The setting you want to receive
+        """
+        self.set_tool(ToolSelector.change_settings)
+        self._send_data_to_pico(ToolSelector.change_settings.value)
+        self._send_data_to_pico(setting.value)
+        time.sleep(0.1)
+        try:
+            if setting == SettingsSelector.get_adc_sample_rate:
+                value = self._get_data_from_pico().decode()
+                value = self._clock_devide_to_sample_rate(value)
+                return value
+            else:
+                return self._get_data_from_pico().decode()
+        except:
+            if setting == SettingsSelector.set_adc_sample_rate:
+                value = str(self._get_data_from_pico())
+                value = self._clock_devide_to_sample_rate(value)
+                return value
+            else:
+                return self._get_data_from_pico()
+
 
     def set_tool(self, tool: ToolSelector):
         """
@@ -257,10 +290,24 @@ class PicoCom:
                 if (raw_data != 0):
                     decoded_data = raw_data.decode()
                     mapped_data = map(float, decoded_data.rstrip("\n").rstrip("\r").split(",")[:-1])
-                    self.SA_values = np.fromiter(mapped_data, dtype=np.float32)
+                    SA_values_array = np.fromiter(mapped_data, dtype=np.float32)
+                    self.SA_values = np.log10(np.sqrt(SA_values_array) / self.capture_depth) * 10
             except:
                 print("SOrry zal dit fixe")
 
+
+    def set_capture_depth(self, capture_depth: int):
+        """
+        Sets capture depth, important for spectrum analyzer fft plot set this for a better plot
+
+        ...
+
+        Parameters
+        ----------
+        capture_depth : int  
+            The capture depth to change after chaning capture depth in settings.
+        """
+        self.capture_depth = capture_depth
     def _lia_thread(self, e):
         "LIA thread"
         while True:
@@ -307,3 +354,13 @@ class PicoCom:
         TODO
         """
         pass
+
+
+    def _sample_rate_to_clock_devide(self, sample_rate):
+        clock_devide_value = 48000000//int(sample_rate)
+        return clock_devide_value
+
+
+    def _clock_devide_to_sample_rate(self, clock_devide):
+        sample_rate_value = 48000000//int(clock_devide)
+        return sample_rate_value

@@ -151,7 +151,7 @@ class MainPage(tk.Frame):
         canvas = FigureCanvasTkAgg(fig, master=root)
         # plt.xlim(0, 500000/2+1) ## THIS IS THE MAX WINDOW FOR DE INTERNAL ADC
         plt.xlim(0, sa_sample_rate/2+1)
-        plt.ylim(-50, 40)
+        plt.ylim(-35, 35)
         plt.xlabel('Frequency')
         plt.ylabel('Amplitude')
         plt.title('Spectrum analyser')

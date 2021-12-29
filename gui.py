@@ -138,9 +138,11 @@ class MainPage(tk.Frame):
             if pico is not None:
                 x = range(0,int(sa_sample_rate/2),int(sa_sample_rate/sa_capture_depth))
                 if (len(pico.get_SA_values()) == len(x)) and pico is not None:
+                    ax.set_xlim(0, sa_sample_rate/2+1)
                     line.set_data(x, pico.get_SA_values())
                     highest_amp = np.argmax(pico.get_SA_values())
                     label.set_text(f"HIGHEST FREQ: {x[highest_amp]}\nHZ/STEP: {sa_sample_rate/sa_capture_depth}")
+
                 else:
                     line.set_data(0, 0)
             else:
@@ -150,13 +152,14 @@ class MainPage(tk.Frame):
         global canvas
         canvas = FigureCanvasTkAgg(fig, master=root)
         # plt.xlim(0, 500000/2+1) ## THIS IS THE MAX WINDOW FOR DE INTERNAL ADC
+        ax.set_yticklabels([])
         plt.xlim(0, sa_sample_rate/2+1)
-        plt.ylim(-60, 10)
+        plt.ylim(-20, 30)
         plt.xlabel('Frequency')
-        plt.ylabel('Amplitude (dB)')
+        plt.ylabel('Amplitude')
         plt.title('Spectrum analyser')
         plt.autoscale(enable=True, axis='x')
-        self.ani =  matplotlib.animation.FuncAnimation(fig, animate, init_func=init_line, interval=25, blit=True)
+        self.ani =  matplotlib.animation.FuncAnimation(fig, animate, init_func=init_line, interval=25, blit=False)
 
 # ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- #
 # Start tool 1

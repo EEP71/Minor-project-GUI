@@ -291,7 +291,9 @@ class PicoCom:
                     decoded_data = raw_data.decode()
                     mapped_data = map(float, decoded_data.rstrip("\n").rstrip("\r").split(",")[:-1])
                     SA_values_array = np.fromiter(mapped_data, dtype=np.float32)
-                    self.SA_values = np.log10(np.sqrt(SA_values_array) / self.capture_depth) * 10
+                    SA_log_scale = np.log10(np.sqrt(SA_values_array) / self.capture_depth) * 10
+                    highest_value = np.amax(SA_log_scale)
+                    self.SA_values = SA_log_scale - highest_value
             except:
                 print("SOrry zal dit fixe")
 

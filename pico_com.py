@@ -41,6 +41,8 @@ class SettingsSelector(Enum):
 
     get_adc_capture_depth = b'n'
     get_adc_sample_rate =   b'o'
+    set_awg_duty_cycle  =  b'p'
+
 
 
 class PicoCom:
@@ -336,7 +338,7 @@ class PicoCom:
         "AWG thread"
         while True:
             e.wait()
-            print("_AWG_thread  RUNNING")
+            self._send_data_to_pico(ToolSelector.AWG.value)
 
     def _stop_all_threads(self):
         "pauses all running threads"

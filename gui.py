@@ -392,7 +392,22 @@ class MainPage(tk.Frame):
                     pico.set_tool(ToolSelector.SA)
                 except:
                     print("VALUE IS NOT A FUCKING INT THIS TRY EXPECT SUCKS BTW CHANGE iT TO CHECK IF VALUES ARE INT NOT CHARACTERS")
+            elif tool_one == "awg":
+                try:
+                    wave_type = int(self.wave_type.get())
+                    freq = int(self.freq.get())
+                    ptp = int(self.ptp.get())
+                    offset = int(self.offset.get())
+                    channel = int(self.channel_nmr.get())
+                    print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_wave_type, wave_type)}")
+                    print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_dac_freq, freq)}")
+                    print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_peak_to_peak, ptp)}")
+                    print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_offset, offset)}")
+                    print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_channel_number, channel)}")
 
+                    pico.set_tool(ToolSelector.AWG)
+                except:
+                    print("VALUE IS NOT A FUCKING INT THIS TRY EXPECT SUCKS BTW CHANGE iT TO CHECK IF VALUES ARE INT NOT CHARACTERS")
         else:
             self.but_one.config(background="#B2D3BE", text="Start")
             pico.set_tool(ToolSelector.no_tool)

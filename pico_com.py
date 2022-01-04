@@ -88,7 +88,6 @@ class PicoCom:
         self.SA_thread_event = threading.Event()
         self.LIA_thread_event = threading.Event()
         self.scope_thread_event = threading.Event()
-        self.AWG_thread_event = threading.Event()
         self.tool_select =  ToolSelector.no_tool
         self.SA_values =    np.empty([0, 0], dtype=np.float32)
         self.scope_values = np.empty([0, 0], dtype=np.float32)
@@ -117,12 +116,6 @@ class PicoCom:
         self.LIA_thread_event.clear()
         scope_thread.start()
 
-        AWG_thread        = threading.Thread(target=self._AWG_thread, args=(self.AWG_thread_event,))
-        AWG_thread.name   = "AWG_thread"
-        AWG_thread.daemon = True
-        self.AWG_thread_event.clear()
-        AWG_thread.start()
-
     def _select_command(self, selector):
         """Selects the command from set_tool()
         1: Arbitrary waveform generator
@@ -137,10 +130,11 @@ class PicoCom:
         """
         if self.tool_select == ToolSelector.no_tool:
             self._stop_all_threads()
+            self._send_data_to_pico(ToolSelector.no_tool.value)
             self.tool_select = 0
         elif self.tool_select == ToolSelector.AWG:
             self._stop_all_threads()
-            self.AWG_thread_event.set()
+            self._send_data_to_pico(ToolSelector.AWG.value)
             self.tool_select = 0
         elif self.tool_select == ToolSelector.LIA:
             self._stop_all_threads()
@@ -323,29 +317,22 @@ class PicoCom:
         "Scope thread that gets the scope values from the Pico toolbox and converts data to numpy array"
         while True:
             e.wait()
-            self._send_data_to_pico(ToolSelector.SA.value)
+            self._send_data_to_pico(ToolSelector.scope.value)
             time.sleep(1/self.communication_speed_hz)
             raw_data = self._get_data_from_pico()
             try:
                 if (raw_data != 0):
                     decoded_data = raw_data.decode()
-                    mapped_data = map(float, decoded_data.rstrip("  ").rstrip("\r").split(",")[:-1])
-                    self.scope_values = np.fromiter(mapped_data, dtype=np.float32)
+                    mapped_data = map(int, decoded_data.rstrip("  ").rstrip("\r").split(",")[:-1])
+                    self.scope_values = np.fromiter(mapped_data, dtype=int)
             except:
                 print("SOrry zal dit fixe")
-
-    def _AWG_thread(self, e):
-        "AWG thread"
-        while True:
-            e.wait()
-            self._send_data_to_pico(ToolSelector.AWG.value)
 
     def _stop_all_threads(self):
         "pauses all running threads"
         self.SA_thread_event.clear()
         self.LIA_thread_event.clear()
         self.scope_thread_event.clear()
-        self.AWG_thread_event.clear()
         # self.serial_com.cancel_read()
         # self.serial_com.cancel_write()
         # # self.serial_com.reset_input_buffer()

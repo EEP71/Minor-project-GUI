@@ -448,7 +448,14 @@ class MainPage(tk.Frame):
                 except:
                     print("VALUE IS NOT A FUCKING INT THIS TRY EXPECT SUCKS BTW CHANGE iT TO CHECK IF VALUES ARE INT NOT CHARACTERS")
             elif tool_one == "osc":
-                pico.set_tool(ToolSelector.scope)
+                try:
+
+                    # trigger = int( float(self.trigger.get()) * 10 )
+                    # print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_direction, direction)}")
+                    # print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_trigger, trigger)}")
+                    pico.set_tool(ToolSelector.scope)
+                except:
+                    print("VALUE IS NOT A FUCKING INT THIS TRY EXPECT SUCKS BTW CHANGE iT TO CHECK IF VALUES ARE INT NOT CHARACTERS")
         else:
             self.but_one.config(background="#B2D3BE", text="Start")
             pico.set_tool(ToolSelector.no_tool)

@@ -232,7 +232,7 @@ class PicoCom:
 
         Parameters
         ----------
-        tool : ToolSelector  
+        tool : ToolSelector 
             The setting which needs to be changed
         """
         self.tool_select = tool

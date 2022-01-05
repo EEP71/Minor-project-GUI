@@ -122,53 +122,12 @@ class MainPage(tk.Frame):
 
 # ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- #
 # Graph
-        #### SA!!!!#######
-        # fig = plt.figure()
-        # ax = fig.add_subplot(1, 1, 1)
-        # line = plt.plot([],[])[0]
-
-        # label = ax.text(0, 0, "HIGHEST FREQ:", ha='left', va='top', fontsize=20, color="Red")
-        # def init_line():
-        #     line.set_data(0, 0)
-        #     return (line,)
-
-        # def animate(i):
-        #     global x
-        #     global pico
-        #     if pico is not None:
-        #         x = range(0,int(sa_sample_rate/2),int(sa_sample_rate/sa_capture_depth))
-        #         if (len(pico.get_SA_values()) == len(x)) and pico is not None:
-        #             ax.set_xlim(0, sa_sample_rate/2+1)
-        #             line.set_data(x, pico.get_SA_values())
-        #             highest_amp = np.argmax(pico.get_SA_values())
-        #             label.set_text(f"HIGHEST FREQ: {x[highest_amp]}\nHZ/STEP: {sa_sample_rate/sa_capture_depth}")
-
-        #         else:
-        #             line.set_data(0, 0)
-        #     else:
-        #         line.set_data(0, 0)
-        #     return line, label,
-
-        # global canvas
-        # canvas = FigureCanvasTkAgg(fig, master=root)
-        # # plt.xlim(0, 500000/2+1) ## THIS IS THE MAX WINDOW FOR DE INTERNAL ADC
-        # ax.set_yticklabels([])
-        # plt.xlim(0, sa_sample_rate/2+1)
-        # plt.ylim(-20, 30)
-        # plt.xlabel('Frequency')
-        # plt.ylabel('Amplitude')
-        # plt.title('Spectrum analyser')
-        # plt.autoscale(enable=True, axis='x')
-        # self.ani =  matplotlib.animation.FuncAnimation(fig, animate, init_func=init_line, interval=25, blit=False)
-        #### END SA!!!!#######
-
-    ####### SCOPE######
-
-
+        ### SA!!!!#######
         fig = plt.figure()
         ax = fig.add_subplot(1, 1, 1)
         line = plt.plot([],[])[0]
 
+        label = ax.text(0, 0, "HIGHEST FREQ:", ha='left', va='top', fontsize=20, color="Red")
         def init_line():
             line.set_data(0, 0)
             return (line,)
@@ -177,25 +136,66 @@ class MainPage(tk.Frame):
             global x
             global pico
             if pico is not None:
-                x = range(0,500,1)
-                if (len(pico.get_scope_values()) == len(x)) and pico is not None:
+                x = range(0,int(sa_sample_rate/2),int(sa_sample_rate/sa_capture_depth))
+                if (len(pico.get_SA_values()) == len(x)) and pico is not None:
+                    ax.set_xlim(0, sa_sample_rate/2+1)
+                    line.set_data(x, pico.get_SA_values())
+                    highest_amp = np.argmax(pico.get_SA_values())
+                    label.set_text(f"HIGHEST FREQ: {x[highest_amp]}\nHZ/STEP: {sa_sample_rate/sa_capture_depth}")
 
-                    line.set_data(x, pico.get_scope_values())
                 else:
                     line.set_data(0, 0)
             else:
                 line.set_data(0, 0)
-            return line,
+            return line, label,
 
         global canvas
         canvas = FigureCanvasTkAgg(fig, master=root)
-        plt.xlim(0, 500)
-        plt.ylim(0, 4095)
-        plt.xlabel('x')
-        plt.ylabel('y')
-        plt.title('SCOPE')
+        # plt.xlim(0, 500000/2+1) ## THIS IS THE MAX WINDOW FOR DE INTERNAL ADC
+        ax.set_yticklabels([])
+        plt.xlim(0, sa_sample_rate/2+1)
+        plt.ylim(-20, 30)
+        plt.xlabel('Frequency')
+        plt.ylabel('Amplitude')
+        plt.title('Spectrum analyser')
         plt.autoscale(enable=True, axis='x')
         self.ani =  matplotlib.animation.FuncAnimation(fig, animate, init_func=init_line, interval=25, blit=False)
+        ### END SA!!!!#######
+
+    ####### SCOPE######
+
+
+        # fig = plt.figure()
+        # ax = fig.add_subplot(1, 1, 1)
+        # line = plt.plot([],[])[0]
+
+        # def init_line():
+        #     line.set_data(0, 0)
+        #     return (line,)
+
+        # def animate(i):
+        #     global x
+        #     global pico
+        #     if pico is not None:
+        #         x = range(0,500,1)
+        #         if (len(pico.get_scope_values()) == len(x)) and pico is not None:
+
+        #             line.set_data(x, pico.get_scope_values())
+        #         else:
+        #             line.set_data(0, 0)
+        #     else:
+        #         line.set_data(0, 0)
+        #     return line,
+
+        # global canvas
+        # canvas = FigureCanvasTkAgg(fig, master=root)
+        # plt.xlim(0, 500)
+        # plt.ylim(0, 4095)
+        # plt.xlabel('x')
+        # plt.ylabel('y')
+        # plt.title('SCOPE')
+        # plt.autoscale(enable=True, axis='x')
+        # self.ani =  matplotlib.animation.FuncAnimation(fig, animate, init_func=init_line, interval=25, blit=False)
 
 
 

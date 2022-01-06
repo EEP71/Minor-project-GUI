@@ -25,6 +25,7 @@ tool_two = ""
 
 root = None
 pico = None
+validation = None
 
 #######SPECTRUM ANALUZER GLOBALS#########
 sa_capture_depth = 1000  #This is the default value of the pico
@@ -210,38 +211,78 @@ class MainPage(tk.Frame):
         self.title_one.place(x=(width / 2) - (self.title_one.winfo_reqwidth() / 2) + 600, y=20)
 
 # ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- #
-# AWG
-        self.wave_type_text = tk.Label(self, text = "Wave Type", font = controller.paragraph_font)
-        self.wave_type_text.configure(background="#5E6073")
-        self.wave_type_text.configure(foreground="#F2F4D1")
+# AWG - left
+        self.wave_type_text_left = tk.Label(self, text = "Wave Type", font = controller.paragraph_font)
+        self.wave_type_text_left.configure(background="#5E6073")
+        self.wave_type_text_left.configure(foreground="#F2F4D1")
 
         waves = ["Sine", "Triangle", "Square", "Pulse", "Saw"]
-        self.slected_wave = StringVar()
-        self.wave_type = ttk.Combobox(self, width=20, textvariable = self.slected_wave, values=waves, state="readonly")
+        self.slected_wave_left = StringVar()
+        self.wave_type_left = ttk.Combobox(self, width=17, textvariable = self.slected_wave_left, values=waves, state="readonly")
 
-        self.dc_text = tk.Label(self, text = "Duty Cycle", font = controller.paragraph_font)
-        self.dc_text.configure(background="#5E6073")
-        self.dc_text.configure(foreground="#F2F4D1")
+        self.dc_text_left = tk.Label(self, text = "Duty Cycle", font = controller.paragraph_font)
+        self.dc_text_left.configure(background="#5E6073")
+        self.dc_text_left.configure(foreground="#F2F4D1")
 
-        self.dc = tk.Entry(self, width=20)
+        self.dc_left = tk.Entry(self, width=20, validate="key", validatecommand=(validation, '%S'))
 
-        self.freq_text = tk.Label(self, text = "Frequency", font = controller.paragraph_font)
-        self.freq_text.configure(background="#5E6073")
-        self.freq_text.configure(foreground="#F2F4D1")
+        self.freq_text_left = tk.Label(self, text = "Frequency", font = controller.paragraph_font)
+        self.freq_text_left.configure(background="#5E6073")
+        self.freq_text_left.configure(foreground="#F2F4D1")
 
-        self.freq = tk.Entry(self, width=20)
+        self.freq_left = tk.Entry(self, width=20, validate="key", validatecommand=(validation, '%S'))
 
-        self.ampl_text = tk.Label(self, text = "Amplitude", font = controller.paragraph_font)
-        self.ampl_text.configure(background="#5E6073")
-        self.ampl_text.configure(foreground="#F2F4D1")
+        self.ampl_text_left = tk.Label(self, text = "Amplitude", font = controller.paragraph_font)
+        self.ampl_text_left.configure(background="#5E6073")
+        self.ampl_text_left.configure(foreground="#F2F4D1")
 
-        self.ampl = tk.Entry(self, width=20)
+        self.ampl_left = tk.Entry(self, width=20, validate="key", validatecommand=(validation, '%S'))
 
-        self.offset_text = tk.Label(self, text = "Offset", font = controller.paragraph_font)
-        self.offset_text.configure(background="#5E6073")
-        self.offset_text.configure(foreground="#F2F4D1")
+        self.offset_text_left = tk.Label(self, text = "Offset", font = controller.paragraph_font)
+        self.offset_text_left.configure(background="#5E6073")
+        self.offset_text_left.configure(foreground="#F2F4D1")
 
-        self.offset = tk.Entry(self, width=20)
+        self.offset_left = tk.Entry(self, width=20, validate="key", validatecommand=(validation, '%S'))
+
+        self.chan_enable_left = tk.Button(self, text = "Enable A", width=10, command = lambda: self.tempfunc(), font = controller.button_font)
+        self.chan_enable_left.configure(background="#B2D3BE")
+
+# ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- #
+# AWG - right
+        self.wave_type_text_right = tk.Label(self, text = "Wave Type", font = controller.paragraph_font)
+        self.wave_type_text_right.configure(background="#5E6073")
+        self.wave_type_text_right.configure(foreground="#F2F4D1")
+
+        waves = ["Sine", "Triangle", "Square", "Pulse", "Saw"]
+        self.slected_wave_right = StringVar()
+        self.wave_type_right = ttk.Combobox(self, width=17, textvariable = self.slected_wave_right, values=waves, state="readonly")
+
+        self.dc_text_right = tk.Label(self, text = "Duty Cycle", font = controller.paragraph_font)
+        self.dc_text_right.configure(background="#5E6073")
+        self.dc_text_right.configure(foreground="#F2F4D1")
+
+        self.dc_right = tk.Entry(self, width=20, validate="key", validatecommand=(validation, '%S'))
+
+        self.freq_text_right = tk.Label(self, text = "Frequency", font = controller.paragraph_font)
+        self.freq_text_right.configure(background="#5E6073")
+        self.freq_text_right.configure(foreground="#F2F4D1")
+
+        self.freq_right = tk.Entry(self, width=20, validate="key", validatecommand=(validation, '%S'))
+
+        self.ampl_text_right = tk.Label(self, text = "Amplitude", font = controller.paragraph_font)
+        self.ampl_text_right.configure(background="#5E6073")
+        self.ampl_text_right.configure(foreground="#F2F4D1")
+
+        self.ampl_right = tk.Entry(self, width=20, validate="key", validatecommand=(validation, '%S'))
+
+        self.offset_text_right = tk.Label(self, text = "Offset", font = controller.paragraph_font)
+        self.offset_text_right.configure(background="#5E6073")
+        self.offset_text_right.configure(foreground="#F2F4D1")
+
+        self.offset_right = tk.Entry(self, width=20, validate="key", validatecommand=(validation, '%S'))
+
+        self.chan_enable_right = tk.Button(self, text = "Enable B", width=10, command = lambda: self.start_one(), font = controller.button_font)
+        self.chan_enable_right.configure(background="#B2D3BE")
 
 # ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- #
 # OSC
@@ -257,7 +298,7 @@ class MainPage(tk.Frame):
         self.trigger_text.configure(background="#5E6073")
         self.trigger_text.configure(foreground="#F2F4D1")
 
-        self.trigger = tk.Entry(self, width=30)
+        self.trigger = tk.Entry(self, width=30, validate="key", validatecommand=(validation, '%S'))
 
         self.direction_text = tk.Label(self, text = "Direction", font = controller.paragraph_font)
         self.direction_text.configure(background="#5E6073")
@@ -267,17 +308,17 @@ class MainPage(tk.Frame):
         self.selected_dir = StringVar()
         self.direction = ttk.Combobox(self, width=30, textvariable = self.selected_dir, values=dir_values, state="readonly")
 
-        self.sd_text_osc = tk.Label(self, text = "Seconds per division", font = controller.paragraph_font)
-        self.sd_text_osc.configure(background="#5E6073")
-        self.sd_text_osc.configure(foreground="#F2F4D1")
+        # self.sd_text_osc = tk.Label(self, text = "Seconds per division", font = controller.paragraph_font)
+        # self.sd_text_osc.configure(background="#5E6073")
+        # self.sd_text_osc.configure(foreground="#F2F4D1")
 
-        self.sd_osc = tk.Entry(self, width=30)
+        # self.sd_osc = tk.Entry(self, width=30)
 
-        self.vd_text_osc = tk.Label(self, text = "Voltage per division", font = controller.paragraph_font)
-        self.vd_text_osc.configure(background="#5E6073")
-        self.vd_text_osc.configure(foreground="#F2F4D1")
+        # self.vd_text_osc = tk.Label(self, text = "Voltage per division", font = controller.paragraph_font)
+        # self.vd_text_osc.configure(background="#5E6073")
+        # self.vd_text_osc.configure(foreground="#F2F4D1")
 
-        self.vd_osc = tk.Entry(self, width=30)
+        # self.vd_osc = tk.Entry(self, width=30)
 
 # ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- #
 # SA
@@ -285,13 +326,13 @@ class MainPage(tk.Frame):
         self.sample_rate_text.configure(background="#5E6073")
         self.sample_rate_text.configure(foreground="#F2F4D1")
 
-        self.sample_rate = tk.Entry(self, width=30)
+        self.sample_rate = tk.Entry(self, width=30, validate="key", validatecommand=(validation, '%S'))
 
         self.fft_size_text = tk.Label(self, text = "Capture depth", font = controller.paragraph_font)
         self.fft_size_text.configure(background="#5E6073")
         self.fft_size_text.configure(foreground="#F2F4D1")
 
-        self.fft_size = tk.Entry(self, width=30)
+        self.fft_size = tk.Entry(self, width=30, validate="key", validatecommand=(validation, '%S'))
 
 # ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- #
 # End tool 1
@@ -313,7 +354,6 @@ class MainPage(tk.Frame):
 
 # ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- #
 # End tool 2
-
         self.but_two = tk.Button(self, text = "Start", width=20, command = lambda: self.start_two(), font = controller.button_font)
         self.but_two.configure(background="#B2D3BE")
 
@@ -335,6 +375,7 @@ class MainPage(tk.Frame):
             self.title_one.config(text="Arbitrary Waveform\n Generator")
             self.title_one.place(x=(width / 2) - (self.title_one.winfo_reqwidth() / 2) + 600, y=20)
 
+            self.but_one.place(x=-200, y=-200)
             self.swap_buttons("awg", 0)
         else:
             self.dropdown_two['values'] = ["None", "Arbitrary Waveform Generator"]
@@ -367,6 +408,7 @@ class MainPage(tk.Frame):
             self.title_two.config(text="Arbitrary Waveform\n Generator")
             self.title_two.place(x=(width / 2) - (self.title_two.winfo_reqwidth() / 2) + 600, y=height/2 + 20)
 
+            self.but_two.place(x=-200, y=-200)
             self.swap_buttons("awg", 1)
         else:
             self.dropdown_one['values'] = ["None", "Arbitrary Waveform Generator"]
@@ -447,16 +489,29 @@ class MainPage(tk.Frame):
             tool_two = tool
 
         if tool_one != "awg" and tool_two != "awg":
-            self.wave_type_text.place(x=-200, y=-200)
-            self.wave_type.place(x=-200, y=-200)
-            self.dc_text.place(x=-200, y=-200)
-            self.dc.place(x=-200, y=-200)
-            self.freq_text.place(x=-200, y=-200)
-            self.freq.place(x=-200, y=-200)
-            self.ampl_text.place(x=-200, y=-200)
-            self.ampl.place(x=-200, y=-200)
-            self.offset_text.place(x=-200, y=-200)
-            self.offset.place(x=-200, y=-200)
+            self.wave_type_text_left.place(x=-200, y=-200)
+            self.wave_type_left.place(x=-200, y=-200)
+            self.dc_text_left.place(x=-200, y=-200)
+            self.dc_left.place(x=-200, y=-200)
+            self.freq_text_left.place(x=-200, y=-200)
+            self.freq_left.place(x=-200, y=-200)
+            self.ampl_text_left.place(x=-200, y=-200)
+            self.ampl_left.place(x=-200, y=-200)
+            self.offset_text_left.place(x=-200, y=-200)
+            self.offset_left.place(x=-200, y=-200)
+            self.chan_enable_left.place(x=-200, y=-200)
+
+            self.wave_type_text_right.place(x=-200, y=-200)
+            self.wave_type_right.place(x=-200, y=-200)
+            self.dc_text_right.place(x=-200, y=-200)
+            self.dc_right.place(x=-200, y=-200)
+            self.freq_text_right.place(x=-200, y=-200)
+            self.freq_right.place(x=-200, y=-200)
+            self.ampl_text_right.place(x=-200, y=-200)
+            self.ampl_right.place(x=-200, y=-200)
+            self.offset_text_right.place(x=-200, y=-200)
+            self.offset_right.place(x=-200, y=-200)
+            self.chan_enable_right.place(x=-200, y=-200)
 
         if tool_one != "osc" and tool_two != "osc":
             self.amp_text.place(x=-200, y=-200)
@@ -465,10 +520,10 @@ class MainPage(tk.Frame):
             self.trigger.place(x=-200, y=-200)
             self.direction_text.place(x=-200, y=-200)
             self.direction.place(x=-200, y=-200)
-            self.sd_text_osc.place(x=-200, y=-200)
-            self.sd_osc.place(x=-200, y=-200)
-            self.vd_text_osc.place(x=-200, y=-200)
-            self.vd_osc.place(x=-200, y=-200)
+            # self.sd_text_osc.place(x=-200, y=-200)
+            # self.sd_osc.place(x=-200, y=-200)
+            # self.vd_text_osc.place(x=-200, y=-200)
+            # self.vd_osc.place(x=-200, y=-200)
 
         if tool_two != "sa" and tool_two != "sa":
             self.sample_rate_text.place(x=-200, y=-200)
@@ -477,16 +532,29 @@ class MainPage(tk.Frame):
             self.fft_size.place(x=-200, y=-200)
 
         if tool == "awg":
-            self.wave_type_text.place(x=(width / 2) - (self.wave_type_text.winfo_reqwidth() / 2) + 520, y=95 + height / 2 * side)
-            self.wave_type.place(x=(width / 2) - (self.wave_type.winfo_reqwidth() / 2) + 520, y=120 + height / 2 * side)
-            self.dc_text.place(x=(width / 2) - (self.dc_text.winfo_reqwidth() / 2) + 520, y=145 + height / 2 * side)
-            self.dc.place(x=(width / 2) - (self.dc.winfo_reqwidth() / 2) + 520, y=170 + height / 2 * side)
-            self.freq_text.place(x=(width / 2) - (self.freq_text.winfo_reqwidth() / 2) + 520, y=195 + height / 2 * side)
-            self.freq.place(x=(width / 2) - (self.freq.winfo_reqwidth() / 2) + 520, y=220 + height / 2 * side)
-            self.ampl_text.place(x=(width / 2) - (self.ampl_text.winfo_reqwidth() / 2) + 520, y=245 + height / 2 * side)
-            self.ampl.place(x=(width / 2) - (self.ampl.winfo_reqwidth() / 2) + 520, y=270 + height / 2 * side)
-            self.offset_text.place(x=(width / 2) - (self.offset_text.winfo_reqwidth() / 2) + 520, y=295 + height / 2 * side)
-            self.offset.place(x=(width / 2) - (self.offset.winfo_reqwidth() / 2) + 520, y=320 + height / 2 * side)
+            self.wave_type_text_left.place(x=(width / 2) - (self.wave_type_text_left.winfo_reqwidth() / 2) + 520, y=95 + height / 2 * side)
+            self.wave_type_left.place(x=(width / 2) - (self.wave_type_left.winfo_reqwidth() / 2) + 520, y=120 + height / 2 * side)
+            self.dc_text_left.place(x=(width / 2) - (self.dc_text_left.winfo_reqwidth() / 2) + 520, y=145 + height / 2 * side)
+            self.dc_left.place(x=(width / 2) - (self.dc_left.winfo_reqwidth() / 2) + 520, y=170 + height / 2 * side)
+            self.freq_text_left.place(x=(width / 2) - (self.freq_text_left.winfo_reqwidth() / 2) + 520, y=195 + height / 2 * side)
+            self.freq_left.place(x=(width / 2) - (self.freq_left.winfo_reqwidth() / 2) + 520, y=220 + height / 2 * side)
+            self.ampl_text_left.place(x=(width / 2) - (self.ampl_text_left.winfo_reqwidth() / 2) + 520, y=245 + height / 2 * side)
+            self.ampl_left.place(x=(width / 2) - (self.ampl_left.winfo_reqwidth() / 2) + 520, y=270 + height / 2 * side)
+            self.offset_text_left.place(x=(width / 2) - (self.offset_text_left.winfo_reqwidth() / 2) + 520, y=295 + height / 2 * side)
+            self.offset_left.place(x=(width / 2) - (self.offset_left.winfo_reqwidth() / 2) + 520, y=320 + height / 2 * side)
+            self.chan_enable_left.place(x=(width / 2) - (self.chan_enable_left.winfo_reqwidth() / 2) + 520, y=360 + height / 2 * side)
+
+            self.wave_type_text_right.place(x=(width / 2) - (self.wave_type_text_right.winfo_reqwidth() / 2) + 680, y=95 + height / 2 * side)
+            self.wave_type_right.place(x=(width / 2) - (self.wave_type_right.winfo_reqwidth() / 2) + 680, y=120 + height / 2 * side)
+            self.dc_text_right.place(x=(width / 2) - (self.dc_text_right.winfo_reqwidth() / 2) + 680, y=145 + height / 2 * side)
+            self.dc_right.place(x=(width / 2) - (self.dc_right.winfo_reqwidth() / 2) + 680, y=170 + height / 2 * side)
+            self.freq_text_right.place(x=(width / 2) - (self.freq_text_right.winfo_reqwidth() / 2) + 680, y=195 + height / 2 * side)
+            self.freq_right.place(x=(width / 2) - (self.freq_right.winfo_reqwidth() / 2) + 680, y=220 + height / 2 * side)
+            self.ampl_text_right.place(x=(width / 2) - (self.ampl_text_right.winfo_reqwidth() / 2) + 680, y=245 + height / 2 * side)
+            self.ampl_right.place(x=(width / 2) - (self.ampl_right.winfo_reqwidth() / 2) + 680, y=270 + height / 2 * side)
+            self.offset_text_right.place(x=(width / 2) - (self.offset_text_right.winfo_reqwidth() / 2) + 680, y=295 + height / 2 * side)
+            self.offset_right.place(x=(width / 2) - (self.offset_right.winfo_reqwidth() / 2) + 680, y=320 + height / 2 * side)
+            self.chan_enable_right.place(x=(width / 2) - (self.chan_enable_right.winfo_reqwidth() / 2) + 680, y=360 + height / 2 * side)
         elif tool == "osc":
             self.amp_text.place(x=(width / 2) - (self.amp_text.winfo_reqwidth() / 2) + 600, y=60 + height / 2 * side)
             self.amp.place(x=(width / 2) - (self.amp.winfo_reqwidth() / 2) + 600, y=90 + height / 2 * side)
@@ -494,10 +562,10 @@ class MainPage(tk.Frame):
             self.trigger.place(x=(width / 2) - ( self.trigger.winfo_reqwidth() / 2) + 600, y=150 + height / 2 * side)
             self.direction_text.place(x=(width / 2) - (self.direction_text.winfo_reqwidth() / 2) + 600, y=180 + height / 2 * side)
             self.direction.place(x=(width / 2) - ( self.direction.winfo_reqwidth() / 2) + 600, y=210 + height / 2 * side)
-            self.sd_text_osc.place(x=(width / 2) - (self.sd_text_osc.winfo_reqwidth() / 2) + 600, y=240 + height / 2 * side)
-            self.sd_osc.place(x=(width / 2) - ( self.sd_osc.winfo_reqwidth() / 2) + 600, y=270 + height / 2 * side)
-            self.vd_text_osc.place(x=(width / 2) - (self.vd_text_osc.winfo_reqwidth() / 2) + 600, y=300 + height / 2 * side)
-            self.vd_osc.place(x=(width / 2) - ( self.vd_osc.winfo_reqwidth() / 2) + 600, y=330 + height / 2 * side)
+            # self.sd_text_osc.place(x=(width / 2) - (self.sd_text_osc.winfo_reqwidth() / 2) + 600, y=240 + height / 2 * side)
+            # self.sd_osc.place(x=(width / 2) - ( self.sd_osc.winfo_reqwidth() / 2) + 600, y=270 + height / 2 * side)
+            # self.vd_text_osc.place(x=(width / 2) - (self.vd_text_osc.winfo_reqwidth() / 2) + 600, y=300 + height / 2 * side)
+            # self.vd_osc.place(x=(width / 2) - ( self.vd_osc.winfo_reqwidth() / 2) + 600, y=330 + height / 2 * side)
         elif tool == "sa":
             self.sample_rate_text.place(x=(width / 2) - (self.sample_rate_text.winfo_reqwidth() / 2) + 600, y=130 + height / 2 * side)
             self.sample_rate.place(x=(width / 2) - (self.sample_rate.winfo_reqwidth() / 2) + 600, y=160 + height / 2 * side)
@@ -523,9 +591,13 @@ def center(win):
     # win.geometry(f'{width}x{height}+{x}+{y}')
     win.deiconify()
 
+def only_numbers(char):
+    return char.isdigit()
+
 def init_gui(width, height, title):
-    global root
+    global root, validation
     root = tk.Tk()
     root.wm_geometry(str(width) + "x" + str(height))
     root.wm_title(title)
+    validation = root.register(only_numbers)
     center(root)

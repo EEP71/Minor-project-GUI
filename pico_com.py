@@ -23,27 +23,26 @@ class SettingsSelector(Enum):
     """
     Settings selector enum for selecting the settings
     """
-    set_adc_capture_depth = b'a'
-    set_adc_sample_rate = b'b'
-    set_adc_amplification = b'c'
-    set_channel_number = b'd'
+    set_adc_capture_depth   = b'a'
+    set_adc_sample_rate     = b'b'
+    set_adc_amplification   = b'c'
+    set_channel_number      = b'd'
 
-    set_awg_wave_type = b'e'
-    set_dac_freq = b'f'
-    set_dac_channel_number = b'g'
-    set_peak_to_peak = b'h'
-    set_awg_offset = b'i'
+    set_awg_wave_type       = b'e'
+    set_dac_freq            = b'f'
+    set_dac_channel_number  = b'g'
+    set_peak_to_peak        = b'h'
+    set_awg_offset          = b'i'
 
-    set_mSeconds_per_dev   = b'j'
-    set_trigger            = b'k'
-    set_direction          = b'l'
-    set_mVolt_per_DIV      = b'm'
+    set_mSeconds_per_dev    = b'j'
+    set_trigger             = b'k'
+    set_direction           = b'l'
+    set_mVolt_per_DIV       = b'm'
 
-    get_adc_capture_depth = b'n'
-    get_adc_sample_rate =   b'o'
-    set_awg_duty_cycle  =  b'p'
-
-
+    get_adc_capture_depth   = b'n'
+    get_adc_sample_rate     = b'o'
+    set_awg_duty_cycle      = b'p'
+    set_awg_phase           = b'q'
 
 class PicoCom:
 

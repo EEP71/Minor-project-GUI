@@ -16,7 +16,8 @@ from serial.tools.list_ports_windows import NULL
 
 from pico_com import *
 
-canvas = None
+canvas_sa = None
+canvas_osc = None
 
 width = 0
 height = 0
@@ -113,7 +114,8 @@ class StartPage(tk.Frame):
         if selected_com != "":
             pico = PicoCom(str(selected_com))
             self.controller.up_frame("MainPage")
-            canvas.get_tk_widget().place(x=0, y=0, height=900, width=1200)
+            canvas_sa.get_tk_widget().place(x=-2000, y=-2000, height=900, width=1200)
+            canvas_osc.get_tk_widget().place(x=-2000, y=-2000, height=900, width=1200)
 
 class MainPage(tk.Frame):
     global sa_capture_depth
@@ -128,70 +130,78 @@ class MainPage(tk.Frame):
 
 # ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- #
 # Graph
-        fig = plt.figure()
-        ax = fig.add_subplot(1, 1, 1)
-        line = plt.plot([],[])[0]
+        fig_sa = plt.figure()
+        ax_sa = fig_sa.add_subplot(1, 1, 1)
+        line_sa = plt.plot([],[])[0]
 
-        label = ax.text(0, 0, "HIGHEST FREQ:", ha='left', va='top', fontsize=20, color="Red")
-        def init_line():
-            line.set_data(0, 0)
-            return (line,)
+        def init_line_sa():
+            line_sa.set_data(0, 0)
+            return (line_sa,)
 
     ##### SA #####
-        # def animate(i):
-        #     global x
-        #     global pico
-        #     if pico is not None:
-        #         x = range(0,int(sa_sample_rate/2),int(sa_sample_rate/sa_capture_depth))
-        #         if (len(pico.get_SA_values()) == len(x)) and pico is not None:
-        #             ax.set_xlim(0, sa_sample_rate/2+1)
-        #             line.set_data(x, pico.get_SA_values())
-        #             highest_amp = np.argmax(pico.get_SA_values())
-        #             label.set_text(f"HIGHEST FREQ: {x[highest_amp]}\nHZ/STEP: {sa_sample_rate/sa_capture_depth}")
+        label = ax_sa.text(0, 0, "HIGHEST FREQ:", ha='left', va='top', fontsize=20, color="Red")
+        def animate_spectrum_analyser(i):
+            global x
+            global pico
+            if pico is not None:
+                x = range(0,int(sa_sample_rate/2),int(sa_sample_rate/sa_capture_depth))
+                if (len(pico.get_SA_values()) == len(x)) and pico is not None:
+                    ax_sa.set_xlim(0, sa_sample_rate/2+1)
+                    line_sa.set_data(x, pico.get_SA_values())
+                    highest_amp = np.argmax(pico.get_SA_values())
+                    label.set_text(f"HIGHEST FREQ: {x[highest_amp]}\nHZ/STEP: {sa_sample_rate/sa_capture_depth}")
 
-        #         else:
-        #             line.set_data(0, 0)
-        #     else:
-        #         line.set_data(0, 0)
-        #     return line, label,
+                else:
+                    line_sa.set_data(0, 0)
+            else:
+                line_sa.set_data(0, 0)
+            return line_sa, label,
 
-        # global canvas
-        # canvas = FigureCanvasTkAgg(fig, master=root)
-        # # plt.xlim(0, 500000/2+1) ## THIS IS THE MAX WINDOW FOR DE INTERNAL ADC
-        # ax.set_yticklabels([])
-        # plt.xlim(0, sa_sample_rate/2+1)
-        # plt.ylim(-20, 30)
-        # plt.xlabel('Frequency')
-        # plt.ylabel('Amplitude')
-        # plt.title('Spectrum analyser')
-        # plt.autoscale(enable=True, axis='x')
-        # self.ani =  matplotlib.animation.FuncAnimation(fig, animate, init_func=init_line, interval=25, blit=False)
+        global canvas_sa
+        canvas_sa = FigureCanvasTkAgg(fig_sa, master=root)
+        ax_sa.set_yticklabels([])
+        # plt.xlim(0, 500000/2+1) ## THIS IS THE MAX WINDOW FOR DE INTERNAL ADC
+        plt.xlim(0, sa_sample_rate/2+1)
+        plt.ylim(-20, 30)
+        plt.xlabel('Frequency')
+        plt.ylabel('Amplitude')
+        plt.title('Spectrum analyser')
+        plt.autoscale(enable=True, axis='x')
+        self.ani =  matplotlib.animation.FuncAnimation(fig_sa, animate_spectrum_analyser, init_func=init_line_sa, interval=25, blit=False)
     ##### END SA #####
 
+        fig_osc = plt.figure()
+        ax_osc = fig_osc.add_subplot(1, 1, 1)
+        line_osc = plt.plot([],[])[0]
+
+        def init_line_osc():
+            line_osc.set_data(0, 0)
+            return (line_osc,)
+
     ##### OSC #####
-        def animate(i):
+        def animate_oscilloscope(i):
             global x
             global pico
             if pico is not None:
                 x = range(0,500,1)
                 if (len(pico.get_scope_values()) == len(x)) and pico is not None:
 
-                    line.set_data(x, pico.get_scope_values())
+                    line_osc.set_data(x, pico.get_scope_values())
                 else:
-                    line.set_data(0, 0)
+                    line_osc.set_data(0, 0)
             else:
-                line.set_data(0, 0)
-            return line,
+                line_osc.set_data(0, 0)
+            return line_osc,
 
-        global canvas
-        canvas = FigureCanvasTkAgg(fig, master=root)
+        global canvas_osc
+        canvas_osc = FigureCanvasTkAgg(fig_osc, master=root)
         plt.xlim(0, 500)
         plt.ylim(0, 4095)
         plt.xlabel('Time')
         plt.ylabel('Volts')
         plt.title('Oscilloscope')
         plt.autoscale(enable=True, axis='x')
-        self.ani =  matplotlib.animation.FuncAnimation(fig, animate, init_func=init_line, interval=25, blit=False)
+        self.ani =  matplotlib.animation.FuncAnimation(fig_osc, animate_oscilloscope, init_func=init_line_osc, interval=25, blit=False)
     #### END OSC ####
 
 # ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- #
@@ -453,6 +463,7 @@ class MainPage(tk.Frame):
                 self.chan_enable_left.config(background="#B2D3BE", text="Enable A")
             else:
                 self.chan_enable_right.config(background="#B2D3BE", text="Enable B")
+            self.start_tool("no_tool", awg_side)
 
     def start_two(self, awg_side):
         if self.but_two["text"] == "Start":
@@ -468,6 +479,7 @@ class MainPage(tk.Frame):
                 self.chan_enable_left.config(background="#B2D3BE", text="Enable A")
             else:
                 self.chan_enable_right.config(background="#B2D3BE", text="Enable B")
+            self.start_tool("no_tool", awg_side)
 
     def start_tool(self, tool, awg_side):
         global pico
@@ -493,13 +505,13 @@ class MainPage(tk.Frame):
                 if (wave_type == "Sine"):
                     wave_type = 0
                 elif (wave_type == "Square"):
-                    wave_type == 1
+                    wave_type = 1
                 elif (wave_type == "Pulse"):
-                    wave_type == 2
+                    wave_type = 2
                 elif (wave_type == "Saw"):
-                    wave_type == 3
+                    wave_type = 3
                 elif (wave_type == "Triangle"):
-                    wave_type == 4
+                    wave_type = 4
                 else:
                     wave_type = -1
                 
@@ -507,31 +519,36 @@ class MainPage(tk.Frame):
                 freq = int(self.freq_left.get() if awg_side == "a" else self.freq_right.get())
                 ptp = np.interp(int(self.ptp_left.get() if awg_side == "a" else self.ptp_right.get()), [0.0, 3.3], [0, 4095])
                 offset = np.interp(int(self.offset_left.get() if awg_side == "a" else self.offset_right.get()), [-3.3, 3.3], [0, 8191])
-                channel = int(0 if awg_side == "a" else 1)
                 phase = np.interp(int(self.phase_left.get() if awg_side == "a" else self.phase_right.get()), [0, 360], [0, 4095])
+                channel = int(0 if awg_side == "a" else 1)
+                if channel == 0:
+                    enable_a = 1
+                    # print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_enable_a, enable_a)}")
+                else:
+                    enable_b = 1
+                #     print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_enable_b, enable_b)}")
                 # print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_wave_type, wave_type)}")
+                # print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_duty_cycle, duty_cycle)}")
                 # print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_dac_freq, freq)}")
                 # print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_peak_to_peak, ptp)}")
                 # print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_offset, offset)}")
-                # print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_channel_number, channel)}")
                 # print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_phase, phase)}")
-                # print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_duty_cycle, duty_cycle)}")
+                # print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_channel_number, channel)}")
 
                 pico.set_tool(ToolSelector.AWG)
             except:
                 print("VALUE IS NOT A FUCKING INT THIS TRY EXPECT SUCKS BTW CHANGE iT TO CHECK IF VALUES ARE INT NOT CHARACTERS")
         elif tool == "osc":
             try:
-                trigger = int(float(self.trigger.get()) * 10)
-                direction = int(self.direction.get())
-                amplification = int(self.amp.get())
-                # print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_direction, direction)}")
-                # print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_trigger, trigger)}")
-                # print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.!!!, amplification)}")
+                trigger = int(self.trigger.get())
+                direction = int(1 if self.direction.get() == "Up" else 0)
+                print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_direction, direction)}")
+                print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_trigger, trigger)}")
                 pico.set_tool(ToolSelector.scope)
             except:
                 print("VALUE IS NOT A FUCKING INT THIS TRY EXPECT SUCKS BTW CHANGE iT TO CHECK IF VALUES ARE INT NOT CHARACTERS")
         else:
+            print("no tool")
             pico.set_tool(ToolSelector.no_tool)
 
     def swap_buttons(self, tool, side):
@@ -573,6 +590,8 @@ class MainPage(tk.Frame):
             self.chan_enable_right.place(x=-200, y=-200)
 
         if tool_one != "osc" and tool_two != "osc":
+            canvas_osc.get_tk_widget().place(x=-2000, y=-2000, height=900, width=1200)
+
             self.amp_text.place(x=-200, y=-200)
             self.amp.place(x=-200, y=-200)
             self.trigger_text.place(x=-200, y=-200)
@@ -585,6 +604,7 @@ class MainPage(tk.Frame):
             # self.vd_osc.place(x=-200, y=-200)
 
         if tool_two != "sa" and tool_two != "sa":
+            canvas_sa.get_tk_widget().place(x=-2000, y=-2000, height=900, width=1200)
             self.sample_rate_text.place(x=-200, y=-200)
             self.sample_rate.place(x=-200, y=-200)
             self.fft_size_text.place(x=-200, y=-200)
@@ -619,6 +639,9 @@ class MainPage(tk.Frame):
             self.phase_right.place(x=(width / 2) - (self.offset_left.winfo_reqwidth() / 2) + 680, y=370 + height / 2 * side)
             self.chan_enable_right.place(x=(width / 2) - (self.chan_enable_right.winfo_reqwidth() / 2) + 680, y=400 + height / 2 * side)
         elif tool == "osc":
+            canvas_sa.get_tk_widget().place(x=-2000, y=-2000, height=900, width=1200)
+            canvas_osc.get_tk_widget().place(x=0, y=0, height=900, width=1200)
+
             self.amp_text.place(x=(width / 2) - (self.amp_text.winfo_reqwidth() / 2) + 600, y=60 + height / 2 * side)
             self.amp.place(x=(width / 2) - (self.amp.winfo_reqwidth() / 2) + 600, y=90 + height / 2 * side)
             self.trigger_text.place(x=(width / 2) - (self.trigger_text.winfo_reqwidth() / 2) + 600, y=120 + height / 2 * side)
@@ -630,6 +653,9 @@ class MainPage(tk.Frame):
             # self.vd_text_osc.place(x=(width / 2) - (self.vd_text_osc.winfo_reqwidth() / 2) + 600, y=300 + height / 2 * side)
             # self.vd_osc.place(x=(width / 2) - ( self.vd_osc.winfo_reqwidth() / 2) + 600, y=330 + height / 2 * side)
         elif tool == "sa":
+            canvas_sa.get_tk_widget().place(x=0, y=0, height=900, width=1200)
+            canvas_osc.get_tk_widget().place(x=-2000, y=-2000, height=900, width=1200)
+
             self.sample_rate_text.place(x=(width / 2) - (self.sample_rate_text.winfo_reqwidth() / 2) + 600, y=130 + height / 2 * side)
             self.sample_rate.place(x=(width / 2) - (self.sample_rate.winfo_reqwidth() / 2) + 600, y=160 + height / 2 * side)
             self.fft_size_text.place(x=(width / 2) - (self.fft_size_text.winfo_reqwidth() / 2) + 600, y=190 + height / 2 * side)

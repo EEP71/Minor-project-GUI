@@ -43,6 +43,8 @@ class SettingsSelector(Enum):
     get_adc_sample_rate     = b'o'
     set_awg_duty_cycle      = b'p'
     set_awg_phase           = b'q'
+    set_awg_enable_a        = b'r'
+    set_awg_enable_b        = b's'
 
 class PicoCom:
 

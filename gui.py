@@ -28,12 +28,16 @@ root = None
 pico = None
 validation = None
 
-#######SPECTRUM ANALUZER GLOBALS#########
-sa_capture_depth = 1000  #This is the default value of the pico
-sa_sample_rate   = 50000 #This is the default value of the pico
+##### SA Global #####
+sa_capture_depth = 1000  # This is the default value of the pico
+sa_sample_rate   = 50000 # This is the default value of the pico
 
-#########################################
+##### AWG Globals #####
+awg_offset_gui = [-3.3, 3.3]
+awg_offset_real = [0, 8191]
 
+awg__gui = [-3.3, 3.3]
+awg_offset_real = [0, 8191]
 class MainView(tk.Frame):
     def __init__(self, pages, *args, **kwargs):
         tk.Frame.__init__(self, *args, **kwargs)
@@ -499,19 +503,19 @@ class MainPage(tk.Frame):
                 else:
                     wave_type = -1
                 
-                duty_cycle = int(self.dc_left.get() if awg_side == "a" else self.dc_right.get())
+                duty_cycle = np.interp(int(self.dc_left.get() if awg_side == "a" else self.dc_right.get()), [0, 100], [0, 4095])
                 freq = int(self.freq_left.get() if awg_side == "a" else self.freq_right.get())
-                ptp = int(self.ptp_left.get() if awg_side == "a" else self.ptp_right.get())
-                offset = int(self.offset_left.get() if awg_side == "a" else self.offset_right.get())
+                ptp = np.interp(int(self.ptp_left.get() if awg_side == "a" else self.ptp_right.get()), [0.0, 3.3], [0, 4095])
+                offset = np.interp(int(self.offset_left.get() if awg_side == "a" else self.offset_right.get()), [-3.3, 3.3], [0, 8191])
                 channel = int(0 if awg_side == "a" else 1)
-                phase = int(self.phase_left.get() if awg_side == "a" else self.phase_right.get())
-                print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_wave_type, wave_type)}")
-                print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_dac_freq, freq)}")
-                print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_peak_to_peak, ptp)}")
-                print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_offset, offset)}")
-                print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_channel_number, channel)}")
-                print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_phase, phase)}")
-                print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_duty_cycle, duty_cycle)}")
+                phase = np.interp(int(self.phase_left.get() if awg_side == "a" else self.phase_right.get()), [0, 360], [0, 4095])
+                # print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_wave_type, wave_type)}")
+                # print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_dac_freq, freq)}")
+                # print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_peak_to_peak, ptp)}")
+                # print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_offset, offset)}")
+                # print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_channel_number, channel)}")
+                # print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_phase, phase)}")
+                # print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_duty_cycle, duty_cycle)}")
 
                 pico.set_tool(ToolSelector.AWG)
             except:

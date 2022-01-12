@@ -33,12 +33,26 @@ validation = None
 sa_capture_depth = 1000  # This is the default value of the pico
 sa_sample_rate   = 50000 # This is the default value of the pico
 
+sa_capture_depth_real = [0, 1000]
+sa_sample_rate_real = [0, 500000]
+
 ##### AWG Globals #####
+awg_duty_cycle_gui = [0, 100]
+awg_duty_cycle_real = [0, 4095]
+
+awg_freq_real = [0, 50000]
+
+awg_ptp_gui = [0.0, 3.3]
+awg_ptp_real = [0, 4095]
+
 awg_offset_gui = [-3.3, 3.3]
 awg_offset_real = [0, 8191]
 
-awg__gui = [-3.3, 3.3]
-awg_offset_real = [0, 8191]
+awg_phase_gui = [0, 360]
+awg_phase_real = [0, 4095]
+
+#### OSC Globals ####
+osc_trigger_real = [0, 3.3]
 class MainView(tk.Frame):
     def __init__(self, pages, *args, **kwargs):
         tk.Frame.__init__(self, *args, **kwargs)
@@ -347,11 +361,11 @@ class MainPage(tk.Frame):
 
         self.sample_rate = tk.Entry(self, width=30, validate="key", validatecommand=(validation, '%S'))
 
-        self.fft_size_text = tk.Label(self, text = "Capture depth", font = controller.paragraph_font)
-        self.fft_size_text.configure(background="#5E6073")
-        self.fft_size_text.configure(foreground="#F2F4D1")
+        self.capture_depth_text = tk.Label(self, text = "Capture depth", font = controller.paragraph_font)
+        self.capture_depth_text.configure(background="#5E6073")
+        self.capture_depth_text.configure(foreground="#F2F4D1")
 
-        self.fft_size = tk.Entry(self, width=30, validate="key", validatecommand=(validation, '%S'))
+        self.capture_depth = tk.Entry(self, width=30, validate="key", validatecommand=(validation, '%S'))
 
 # ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- #
 # End tool 1
@@ -461,8 +475,10 @@ class MainPage(tk.Frame):
             self.but_one.config(background="#B2D3BE", text="Start")
             if awg_side == "a":
                 self.chan_enable_left.config(background="#B2D3BE", text="Enable A")
+                print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_enable_a, 0)}")
             else:
                 self.chan_enable_right.config(background="#B2D3BE", text="Enable B")
+                print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_enable_b, 0)}")
             self.start_tool("no_tool", awg_side)
 
     def start_two(self, awg_side):
@@ -487,10 +503,10 @@ class MainPage(tk.Frame):
         global sa_sample_rate
         if tool == "sa":
             try:
-                fft_value = int(self.fft_size.get())
-                sample_rate = int(self.sample_rate.get())
+                capture_depth_value = int(np.ceil(np.interp(float(self.capture_depth.get()), sa_capture_depth_real, sa_capture_depth_real) / 2.) * 2)
+                sample_rate = int(np.interp(float(self.sample_rate.get()), sa_sample_rate_real, sa_sample_rate_real))
                 print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_adc_sample_rate, sample_rate)}")
-                print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_adc_capture_depth, fft_value)}")
+                print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_adc_capture_depth, capture_depth_value)}")
                 sa_sample_rate = int(pico.get_setting(SettingsSelector.get_adc_sample_rate))
                 sa_capture_depth = int(pico.get_setting(SettingsSelector.get_adc_capture_depth))
                 print(f"MESSAGE FROM PICO: Get adc caputre depth = {sa_capture_depth}")
@@ -514,34 +530,33 @@ class MainPage(tk.Frame):
                     wave_type = 4
                 else:
                     wave_type = -1
-                
-                duty_cycle = np.interp(int(self.dc_left.get() if awg_side == "a" else self.dc_right.get()), [0, 100], [0, 4095])
-                freq = int(self.freq_left.get() if awg_side == "a" else self.freq_right.get())
-                ptp = np.interp(int(self.ptp_left.get() if awg_side == "a" else self.ptp_right.get()), [0.0, 3.3], [0, 4095])
-                offset = np.interp(int(self.offset_left.get() if awg_side == "a" else self.offset_right.get()), [-3.3, 3.3], [0, 8191])
-                phase = np.interp(int(self.phase_left.get() if awg_side == "a" else self.phase_right.get()), [0, 360], [0, 4095])
+                duty_cycle = int(np.interp(float(self.dc_left.get() if awg_side == "a" else self.dc_right.get()), awg_duty_cycle_gui, awg_duty_cycle_real))
+                freq = int(np.interp(float(self.freq_left.get() if awg_side == "a" else self.freq_right.get()), awg_freq_real, awg_freq_real))
+                ptp = int(np.interp(float(self.ptp_left.get() if awg_side == "a" else self.ptp_right.get()), awg_ptp_gui, awg_ptp_real))
+                offset = int(np.interp(float(self.offset_left.get() if awg_side == "a" else self.offset_right.get()), awg_offset_gui, awg_offset_real))
+                phase = int(np.interp(float(self.phase_left.get() if awg_side == "a" else self.phase_right.get()), awg_phase_gui, awg_phase_real))
                 channel = int(0 if awg_side == "a" else 1)
                 if channel == 0:
                     enable_a = 1
-                    # print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_enable_a, enable_a)}")
+                    print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_enable_a, enable_a)}")
                 else:
                     enable_b = 1
-                #     print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_enable_b, enable_b)}")
-                # print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_wave_type, wave_type)}")
-                # print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_duty_cycle, duty_cycle)}")
-                # print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_dac_freq, freq)}")
-                # print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_peak_to_peak, ptp)}")
-                # print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_offset, offset)}")
-                # print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_phase, phase)}")
-                # print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_channel_number, channel)}")
+                    print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_enable_b, enable_b)}")
+                print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_wave_type, wave_type)}")
+                print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_duty_cycle, duty_cycle)}")
+                print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_dac_freq, freq)}")
+                print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_peak_to_peak, ptp)}")
+                print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_offset, offset)}")
+                print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_phase, phase)}")
+                print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_channel_number, channel)}")
 
                 pico.set_tool(ToolSelector.AWG)
             except:
                 print("VALUE IS NOT A FUCKING INT THIS TRY EXPECT SUCKS BTW CHANGE iT TO CHECK IF VALUES ARE INT NOT CHARACTERS")
         elif tool == "osc":
             try:
-                trigger = int(self.trigger.get())
-                direction = int(1 if self.direction.get() == "Up" else 0)
+                trigger = int(np.interp(float(self.trigger.get()), [0, 3.3], [0, 3.3]))
+                direction = float(1 if self.direction.get() == "Up" else 0)
                 print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_direction, direction)}")
                 print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_trigger, trigger)}")
                 pico.set_tool(ToolSelector.scope)
@@ -607,8 +622,8 @@ class MainPage(tk.Frame):
             canvas_sa.get_tk_widget().place(x=-2000, y=-2000, height=900, width=1200)
             self.sample_rate_text.place(x=-200, y=-200)
             self.sample_rate.place(x=-200, y=-200)
-            self.fft_size_text.place(x=-200, y=-200)
-            self.fft_size.place(x=-200, y=-200)
+            self.capture_depth_text.place(x=-200, y=-200)
+            self.capture_depth.place(x=-200, y=-200)
 
         if tool == "awg":
             self.wave_type_text_left.place(x=(width / 2) - (self.wave_type_text_left.winfo_reqwidth() / 2) + 520, y=95 + height / 2 * side)
@@ -658,8 +673,8 @@ class MainPage(tk.Frame):
 
             self.sample_rate_text.place(x=(width / 2) - (self.sample_rate_text.winfo_reqwidth() / 2) + 600, y=130 + height / 2 * side)
             self.sample_rate.place(x=(width / 2) - (self.sample_rate.winfo_reqwidth() / 2) + 600, y=160 + height / 2 * side)
-            self.fft_size_text.place(x=(width / 2) - (self.fft_size_text.winfo_reqwidth() / 2) + 600, y=190 + height / 2 * side)
-            self.fft_size.place(x=(width / 2) - (self.fft_size.winfo_reqwidth() / 2) + 600, y=220 + height / 2 * side)
+            self.capture_depth_text.place(x=(width / 2) - (self.capture_depth_text.winfo_reqwidth() / 2) + 600, y=190 + height / 2 * side)
+            self.capture_depth.place(x=(width / 2) - (self.capture_depth.winfo_reqwidth() / 2) + 600, y=220 + height / 2 * side)
 
 def center(win):
     win.update_idletasks()
@@ -681,7 +696,7 @@ def center(win):
     win.deiconify()
 
 def only_numbers(char):
-    return char.isdigit()
+    return char.isdigit() or char == "-" or char == "."
 
 def init_gui(width, height, title):
     global root, validation

@@ -571,9 +571,9 @@ class MainPage(tk.Frame):
                 else:
                     amp = -1
                 print(amp)
-                
-                # print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_direction, direction)}")
-                # print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_trigger, trigger)}")
+                print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_adc_amplification, amp)}")
+                print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_direction, direction)}")
+                print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_trigger, trigger)}")
                 pico.set_tool(ToolSelector.scope)
             except:
                 print("VALUE IS NOT A FUCKING INT THIS TRY EXPECT SUCKS BTW CHANGE iT TO CHECK IF VALUES ARE INT NOT CHARACTERS")

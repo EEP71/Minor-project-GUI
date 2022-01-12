@@ -46,7 +46,7 @@ awg_duty_cycle_real = [0, 4095]
 
 awg_freq_real = [0, 50000]
 
-awg_ptp_gui = [0.0, 3.3]
+awg_ptp_gui = [0.0, 5]
 awg_ptp_real = [0, 4095]
 
 awg_offset_gui = [-3.3, 3.3]
@@ -243,36 +243,50 @@ class MainPage(tk.Frame):
         waves = ["Sine", "Triangle", "Square", "Pulse", "Saw"]
         self.slected_wave_left = StringVar()
         self.wave_type_left = ttk.Combobox(self, width=17, textvariable = self.slected_wave_left, values=waves, state="readonly")
+        self.wave_type_left.current(0)
 
         self.dc_text_left = tk.Label(self, text = "Duty Cycle", font = controller.paragraph_font)
         self.dc_text_left.configure(background="#5E6073")
         self.dc_text_left.configure(foreground="#F2F4D1")
 
         self.dc_left = tk.Entry(self, width=20, validate="key", validatecommand=(validation, '%S'))
+        self.dc_left.insert(0, "25")
+        
+        self.dc_unit_left = tk.Label(self, text = "%", font = controller.paragraph_font)
+        self.dc_unit_left.configure(background="#5E6073")
+        self.dc_unit_left.configure(foreground="#F2F4D1")
 
         self.freq_text_left = tk.Label(self, text = "Frequency", font = controller.paragraph_font)
         self.freq_text_left.configure(background="#5E6073")
         self.freq_text_left.configure(foreground="#F2F4D1")
 
         self.freq_left = tk.Entry(self, width=20, validate="key", validatecommand=(validation, '%S'))
+        self.freq_left.insert(0, "1000")
+
+        self.freq_unit_left = tk.Label(self, text = "Hz", font = controller.paragraph_font)
+        self.freq_unit_left.configure(background="#5E6073")
+        self.freq_unit_left.configure(foreground="#F2F4D1")        
 
         self.ptp_text_left = tk.Label(self, text = "Amplitude", font = controller.paragraph_font)
         self.ptp_text_left.configure(background="#5E6073")
         self.ptp_text_left.configure(foreground="#F2F4D1")
 
         self.ptp_left = tk.Entry(self, width=20, validate="key", validatecommand=(validation, '%S'))
+        self.ptp_left.insert(0, "5")
 
         self.offset_text_left = tk.Label(self, text = "Offset", font = controller.paragraph_font)
         self.offset_text_left.configure(background="#5E6073")
         self.offset_text_left.configure(foreground="#F2F4D1")
 
         self.offset_left = tk.Entry(self, width=20, validate="key", validatecommand=(validation, '%S'))
+        self.offset_left.insert(0, "0")
 
         self.phase_text_left = tk.Label(self, text = "Phase", font = controller.paragraph_font)
         self.phase_text_left.configure(background="#5E6073")
         self.phase_text_left.configure(foreground="#F2F4D1")
 
         self.phase_left = tk.Entry(self, width=20, validate="key", validatecommand=(validation, '%S'))
+        self.phase_left.insert(0, "0")
 
         self.chan_enable_left = tk.Button(self, text = "Enable A", width=10, command = lambda: self.start_awg("a"), font = controller.button_font)
         self.chan_enable_left.configure(background="#B2D3BE")
@@ -286,36 +300,50 @@ class MainPage(tk.Frame):
         waves = ["Sine", "Triangle", "Square", "Pulse", "Saw"]
         self.selected_wave_right = StringVar()
         self.wave_type_right = ttk.Combobox(self, width=17, textvariable = self.selected_wave_right, values=waves, state="readonly")
+        self.wave_type_right.current(0)
 
         self.dc_text_right = tk.Label(self, text = "Duty Cycle", font = controller.paragraph_font)
         self.dc_text_right.configure(background="#5E6073")
         self.dc_text_right.configure(foreground="#F2F4D1")
 
         self.dc_right = tk.Entry(self, width=20, validate="key", validatecommand=(validation, '%S'))
+        self.dc_right.insert(0, "25")
+
+        self.dc_unit_right = tk.Label(self, text = "%", font = controller.paragraph_font)
+        self.dc_unit_right.configure(background="#5E6073")
+        self.dc_unit_right.configure(foreground="#F2F4D1")
 
         self.freq_text_right = tk.Label(self, text = "Frequency", font = controller.paragraph_font)
         self.freq_text_right.configure(background="#5E6073")
         self.freq_text_right.configure(foreground="#F2F4D1")
 
         self.freq_right = tk.Entry(self, width=20, validate="key", validatecommand=(validation, '%S'))
+        self.freq_right.insert(0, "1000")
+
+        self.freq_unit_right = tk.Label(self, text = "Hz", font = controller.paragraph_font)
+        self.freq_unit_right.configure(background="#5E6073")
+        self.freq_unit_right.configure(foreground="#F2F4D1")      
 
         self.ptp_text_right = tk.Label(self, text = "Amplitude", font = controller.paragraph_font)
         self.ptp_text_right.configure(background="#5E6073")
         self.ptp_text_right.configure(foreground="#F2F4D1")
 
         self.ptp_right = tk.Entry(self, width=20, validate="key", validatecommand=(validation, '%S'))
+        self.ptp_right.insert(0, "5")
 
         self.offset_text_right = tk.Label(self, text = "Offset", font = controller.paragraph_font)
         self.offset_text_right.configure(background="#5E6073")
         self.offset_text_right.configure(foreground="#F2F4D1")
 
         self.offset_right = tk.Entry(self, width=20, validate="key", validatecommand=(validation, '%S'))
+        self.offset_right.insert(0, "0")
 
         self.phase_text_right = tk.Label(self, text = "Phase", font = controller.paragraph_font)
         self.phase_text_right.configure(background="#5E6073")
         self.phase_text_right.configure(foreground="#F2F4D1")
 
         self.phase_right = tk.Entry(self, width=20, validate="key", validatecommand=(validation, '%S'))
+        self.phase_right.insert(0, "0")
 
         self.chan_enable_right = tk.Button(self, text = "Enable B", width=10, command = lambda: self.start_awg("b"), font = controller.button_font)
         self.chan_enable_right.configure(background="#B2D3BE")
@@ -329,12 +357,14 @@ class MainPage(tk.Frame):
         amp_values = ["100x", "10x", "1x", "0.1x"]
         self.slected_amp = StringVar()
         self.amp = ttk.Combobox(self, width=30, textvariable = self.slected_amp, values=amp_values, state="readonly")
+        self.amp.current(2)
 
         self.trigger_text = tk.Label(self, text = "Trigger level", font = controller.paragraph_font)
         self.trigger_text.configure(background="#5E6073")
         self.trigger_text.configure(foreground="#F2F4D1")
 
         self.trigger = tk.Entry(self, width=30, validate="key", validatecommand=(validation, '%S'))
+        self.trigger.insert(0, "0")
 
         self.direction_text = tk.Label(self, text = "Direction", font = controller.paragraph_font)
         self.direction_text.configure(background="#5E6073")
@@ -343,6 +373,7 @@ class MainPage(tk.Frame):
         dir_values = ["Up", "Down"]
         self.selected_dir = StringVar()
         self.direction = ttk.Combobox(self, width=30, textvariable = self.selected_dir, values=dir_values, state="readonly")
+        self.direction.current(0)
 
         # self.sd_text_osc = tk.Label(self, text = "Seconds per division", font = controller.paragraph_font)
         # self.sd_text_osc.configure(background="#5E6073")
@@ -363,12 +394,14 @@ class MainPage(tk.Frame):
         self.sample_rate_text.configure(foreground="#F2F4D1")
 
         self.sample_rate = tk.Entry(self, width=30, validate="key", validatecommand=(validation, '%S'))
+        self.sample_rate.insert(0, "500000")
 
         self.capture_depth_text = tk.Label(self, text = "Capture depth", font = controller.paragraph_font)
         self.capture_depth_text.configure(background="#5E6073")
         self.capture_depth_text.configure(foreground="#F2F4D1")
 
         self.capture_depth = tk.Entry(self, width=30, validate="key", validatecommand=(validation, '%S'))
+        self.capture_depth.insert(0, "1000")
 
 # ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- #
 # End tool 1
@@ -725,6 +758,9 @@ class MainPage(tk.Frame):
             self.phase_left.place(x=-200, y=-200)
             self.chan_enable_left.place(x=-200, y=-200)
 
+            self.dc_unit_left.place(x=-200, y=-200)
+            self.freq_unit_left.place(x=-200, y=-200)
+
             self.wave_type_text_right.place(x=-200, y=-200)
             self.wave_type_right.place(x=-200, y=-200)
             self.dc_text_right.place(x=-200, y=-200)
@@ -738,6 +774,9 @@ class MainPage(tk.Frame):
             self.phase_text_right.place(x=-200, y=-200)
             self.phase_right.place(x=-200, y=-200)
             self.chan_enable_right.place(x=-200, y=-200)
+
+            self.dc_unit_right.place(x=-200, y=-200)
+            self.freq_unit_right.place(x=-200, y=-200)
 
         if tool_one != "osc" and tool_two != "osc":
             canvas_osc.get_tk_widget().place(x=-2000, y=-2000, height=900, width=1200)
@@ -775,6 +814,9 @@ class MainPage(tk.Frame):
             self.phase_left.place(x=(width / 2) - (self.offset_left.winfo_reqwidth() / 2) + 520, y=370 + height / 2 * side)
             self.chan_enable_left.place(x=(width / 2) - (self.chan_enable_left.winfo_reqwidth() / 2) + 520, y=400 + height / 2 * side)
 
+            self.dc_unit_left.place(x=(width / 2) - (self.dc_unit_left.winfo_reqwidth() / 2) + 595, y=165 + height / 2 * side)
+            self.freq_unit_left.place(x=(width / 2) - (self.freq_unit_left.winfo_reqwidth() / 2) + 595, y=215 + height / 2 * side)
+
             self.wave_type_text_right.place(x=(width / 2) - (self.wave_type_text_right.winfo_reqwidth() / 2) + 680, y=95 + height / 2 * side)
             self.wave_type_right.place(x=(width / 2) - (self.wave_type_right.winfo_reqwidth() / 2) + 680, y=120 + height / 2 * side)
             self.dc_text_right.place(x=(width / 2) - (self.dc_text_right.winfo_reqwidth() / 2) + 680, y=145 + height / 2 * side)
@@ -788,6 +830,9 @@ class MainPage(tk.Frame):
             self.phase_text_right.place(x=(width / 2) - (self.offset_text_left.winfo_reqwidth() / 2) + 680, y=345 + height / 2 * side)
             self.phase_right.place(x=(width / 2) - (self.offset_left.winfo_reqwidth() / 2) + 680, y=370 + height / 2 * side)
             self.chan_enable_right.place(x=(width / 2) - (self.chan_enable_right.winfo_reqwidth() / 2) + 680, y=400 + height / 2 * side)
+
+            self.dc_unit_right.place(x=(width / 2) - (self.dc_unit_right.winfo_reqwidth() / 2) + 750, y=165 + height / 2 * side)
+            self.freq_unit_right.place(x=(width / 2) - (self.freq_unit_right.winfo_reqwidth() / 2) + 750, y=215 + height / 2 * side)
         elif tool == "osc":
             canvas_sa.get_tk_widget().place(x=-2000, y=-2000, height=900, width=1200)
             canvas_osc.get_tk_widget().place(x=0, y=0, height=900, width=1200)

@@ -555,10 +555,25 @@ class MainPage(tk.Frame):
                 print("VALUE IS NOT A FUCKING INT THIS TRY EXPECT SUCKS BTW CHANGE iT TO CHECK IF VALUES ARE INT NOT CHARACTERS")
         elif tool == "osc":
             try:
-                trigger = int(np.interp(float(self.trigger.get()), [0, 3.3], [0, 3.3]))
+                trigger = int(np.interp(float(self.trigger.get()), [0, 3], [0, 3]))
                 direction = float(1 if self.direction.get() == "Up" else 0)
-                print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_direction, direction)}")
-                print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_trigger, trigger)}")
+
+                amp = self.amp.get()
+                ["100x", "10x", "1x", "0.1x"]
+                if (amp == "100x"):
+                    amp = 0
+                elif (amp == "10x"):
+                    amp = 1
+                elif (amp == "1x"):
+                    amp = 2
+                elif (amp == "0.1x"):
+                    amp = 3
+                else:
+                    amp = -1
+                print(amp)
+                
+                # print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_direction, direction)}")
+                # print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_trigger, trigger)}")
                 pico.set_tool(ToolSelector.scope)
             except:
                 print("VALUE IS NOT A FUCKING INT THIS TRY EXPECT SUCKS BTW CHANGE iT TO CHECK IF VALUES ARE INT NOT CHARACTERS")

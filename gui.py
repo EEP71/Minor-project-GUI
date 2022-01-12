@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import Image, StringVar, ttk, font as tkfont
 from tkinter.constants import *
+from tkinter import messagebox
 
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
@@ -718,9 +719,14 @@ def center(win):
 def only_numbers(char):
     return char.isdigit() or char == "-" or char == "."
 
+def on_closing():
+    if messagebox.askokcancel("Quit", "Do you want to quit?"):
+        root.quit()
+
 def init_gui(width, height, title):
     global root, validation
     root = tk.Tk()
+    root.protocol("WM_DELETE_WINDOW", on_closing)
     root.wm_geometry(str(width) + "x" + str(height))
     root.wm_title(title)
     validation = root.register(only_numbers)

@@ -536,6 +536,7 @@ class MainPage(tk.Frame):
                 offset = int(np.interp(float(self.offset_left.get() if awg_side == "a" else self.offset_right.get()), awg_offset_gui, awg_offset_real))
                 phase = int(np.interp(float(self.phase_left.get() if awg_side == "a" else self.phase_right.get()), awg_phase_gui, awg_phase_real))
                 channel = int(0 if awg_side == "a" else 1)
+                print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_channel_number, channel)}")
                 if channel == 0:
                     enable_a = 1
                     print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_enable_a, enable_a)}")
@@ -548,7 +549,6 @@ class MainPage(tk.Frame):
                 print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_peak_to_peak, ptp)}")
                 print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_offset, offset)}")
                 print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_phase, phase)}")
-                print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_channel_number, channel)}")
 
                 pico.set_tool(ToolSelector.AWG)
             except:
@@ -561,16 +561,15 @@ class MainPage(tk.Frame):
                 amp = self.amp.get()
                 ["100x", "10x", "1x", "0.1x"]
                 if (amp == "100x"):
-                    amp = 0
-                elif (amp == "10x"):
-                    amp = 1
-                elif (amp == "1x"):
-                    amp = 2
-                elif (amp == "0.1x"):
                     amp = 3
+                elif (amp == "10x"):
+                    amp = 2
+                elif (amp == "1x"):
+                    amp = 1
+                elif (amp == "0.1x"):
+                    amp = 0
                 else:
                     amp = -1
-                print(amp)
                 print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_adc_amplification, amp)}")
                 print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_direction, direction)}")
                 print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_trigger, trigger)}")

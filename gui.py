@@ -469,6 +469,7 @@ class MainPage(tk.Frame):
                 channel_enable_a = False
                 self.chan_enable_left.config(background="#B2D3BE", text="Enable A")
                 print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_enable_a, 0)}")
+                pico.set_tool(ToolSelector.no_tool)
                 return
         else:
             global channel_enable_b
@@ -479,6 +480,7 @@ class MainPage(tk.Frame):
                 channel_enable_b = False
                 self.chan_enable_right.config(background="#B2D3BE", text="Enable B")
                 print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_enable_b, 0)}")
+                pico.set_tool(ToolSelector.no_tool)
                 return
 
         if tool_one == "awg":

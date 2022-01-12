@@ -181,7 +181,7 @@ class MainPage(tk.Frame):
         plt.ylabel('Amplitude')
         plt.title('Spectrum analyser')
         plt.autoscale(enable=True, axis='x')
-        self.ani =  matplotlib.animation.FuncAnimation(fig_sa, animate_spectrum_analyser, init_func=init_line_sa, interval=25, blit=False)
+        self.ani_sa =  matplotlib.animation.FuncAnimation(fig_sa, animate_spectrum_analyser, init_func=init_line_sa, interval=25, blit=False)
     ##### END SA #####
 
         fig_osc = plt.figure()
@@ -215,7 +215,7 @@ class MainPage(tk.Frame):
         plt.ylabel('Volts')
         plt.title('Oscilloscope')
         plt.autoscale(enable=True, axis='x')
-        self.ani =  matplotlib.animation.FuncAnimation(fig_osc, animate_oscilloscope, init_func=init_line_osc, interval=25, blit=False)
+        self.ani_osc =  matplotlib.animation.FuncAnimation(fig_osc, animate_oscilloscope, init_func=init_line_osc, interval=25, blit=False)
     #### END OSC ####
 
 # ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- #

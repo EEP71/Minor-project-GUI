@@ -3,6 +3,7 @@ import time
 import threading
 from enum import Enum
 import numpy as np
+import sys
 
 class ToolSelector(Enum):
     """
@@ -45,6 +46,7 @@ class SettingsSelector(Enum):
     set_awg_phase           = b'q'
     set_awg_enable_a        = b'r'
     set_awg_enable_b        = b's'
+    speed_test              = b't'
 
 class PicoCom:
 
@@ -95,6 +97,7 @@ class PicoCom:
         self.communication_speed_hz = 10 #Reading speed in HZ from the pi pico 10hz works for sure
         self.capture_depth = 1
         self._init_pico_threads()
+        self._usb_speed_test()
 
     def _init_pico_threads(self):
         """ Initialize communication threads"""
@@ -357,3 +360,28 @@ class PicoCom:
     def _clock_devide_to_sample_rate(self, clock_devide):
         sample_rate_value = 48000000//int(clock_devide)
         return sample_rate_value
+
+    def _usb_speed_test(self):
+        print("The speedtest will take about 10 seconds be patient")
+        self.set_tool(ToolSelector.change_settings)
+        self._send_data_to_pico(ToolSelector.change_settings.value)
+        self._send_data_to_pico(SettingsSelector.speed_test.value)
+
+
+        start_time = time.time()
+        speedtest_data = self.serial_com.read(1000000)
+        end_time = time.time()
+
+        size_bytes_received = sys.getsizeof(speedtest_data)
+        time_to_receive = end_time - start_time
+        time_formatted = "{:.2f}".format(time_to_receive)
+        print (f"My program took {time_formatted} seconds to receive {size_bytes_received} bytes")
+        bytes_per_second = int(size_bytes_received / time_to_receive)
+        print (f" {bytes_per_second} Bytes/s")
+        bits_received = size_bytes_received * 8
+        bits_per_second = int(bits_received / time_to_receive)
+        print (f" {bits_per_second} Bits/s")
+        mBits_received = size_bytes_received / 125000
+        mBits_per_second = mBits_received / time_to_receive
+        mBits_per_second_formatted = "{:.2f}".format(mBits_per_second)
+        print (f" {mBits_per_second_formatted} mBits/s")

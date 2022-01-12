@@ -151,7 +151,7 @@ class PicoCom:
             self.tool_select = 0
         elif self.tool_select == ToolSelector.AWG_and_scope:
             self._stop_all_threads()
-            print("AWG_and_scope")
+            self._send_data_to_pico(ToolSelector.AWG_and_scope.value)
             self.tool_select = 0
         elif self.tool_select == ToolSelector.AWG_and_LIA:
             self._stop_all_threads()
@@ -159,7 +159,7 @@ class PicoCom:
             self.tool_select = 0
         elif self.tool_select == ToolSelector.AWG_and_SA:
             self._stop_all_threads()
-            print("AWG_and_SA")
+            self._send_data_to_pico(ToolSelector.AWG_and_SA.value)
             self.tool_select = 0
         elif self.tool_select == ToolSelector.change_settings:
             self._stop_all_threads()

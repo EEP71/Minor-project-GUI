@@ -37,6 +37,9 @@ sa_capture_depth_real = [0, 1000]
 sa_sample_rate_real = [0, 500000]
 
 ##### AWG Globals #####
+channel_enable_a = False
+channel_enable_b = False
+
 awg_duty_cycle_gui = [0, 100]
 awg_duty_cycle_real = [0, 4095]
 
@@ -141,7 +144,6 @@ class MainPage(tk.Frame):
 
         seperator = ttk.Separator(self, orient='vertical', style="Line.TSeparator")
         seperator.place(x=(width / 2) - (seperator.winfo_reqwidth() / 2) + 430, rely=0, width=5, relheight=1)
-
 # ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- #
 # Graph
         fig_sa = plt.figure()
@@ -181,7 +183,7 @@ class MainPage(tk.Frame):
         plt.ylabel('Amplitude')
         plt.title('Spectrum analyser')
         plt.autoscale(enable=True, axis='x')
-        self.ani_sa =  matplotlib.animation.FuncAnimation(fig_sa, animate_spectrum_analyser, init_func=init_line_sa, interval=25, blit=False)
+        self.ani =  matplotlib.animation.FuncAnimation(fig_sa, animate_spectrum_analyser, init_func=init_line_sa, interval=25, blit=False)
     ##### END SA #####
 
         fig_osc = plt.figure()
@@ -215,7 +217,7 @@ class MainPage(tk.Frame):
         plt.ylabel('Volts')
         plt.title('Oscilloscope')
         plt.autoscale(enable=True, axis='x')
-        self.ani_osc =  matplotlib.animation.FuncAnimation(fig_osc, animate_oscilloscope, init_func=init_line_osc, interval=25, blit=False)
+        self.ani =  matplotlib.animation.FuncAnimation(fig_osc, animate_oscilloscope, init_func=init_line_osc, interval=25, blit=False)
     #### END OSC ####
 
 # ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- #
@@ -369,7 +371,7 @@ class MainPage(tk.Frame):
 
 # ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- #
 # End tool 1
-        self.but_one = tk.Button(self, text = "Start", width=20, command = lambda: self.start_one(None), font = controller.button_font)
+        self.but_one = tk.Button(self, text = "Start", width=20, command = lambda: self.start_one(), font = controller.button_font)
         self.but_one.configure(background="#B2D3BE")
 
 # ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- #
@@ -387,7 +389,7 @@ class MainPage(tk.Frame):
 
 # ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- #
 # End tool 2
-        self.but_two = tk.Button(self, text = "Start", width=20, command = lambda: self.start_two(None), font = controller.button_font)
+        self.but_two = tk.Button(self, text = "Start", width=20, command = lambda: self.start_two(), font = controller.button_font)
         self.but_two.configure(background="#B2D3BE")
 
 # ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- #
@@ -458,44 +460,45 @@ class MainPage(tk.Frame):
                 self.swap_buttons("sa", 1)
 
     def start_awg(self, awg_side):
-        if tool_one == "awg":
-            self.start_one(awg_side)
-        else:
-            self.start_two(awg_side)
-
-    def start_one(self, awg_side):
-        if self.but_one["text"] == "Start":
-            self.but_one.config(background="#EA7870", text="Stop")
-            if awg_side == "a":
+        if awg_side == "a":
+            global channel_enable_a
+            if channel_enable_a == False:
+                channel_enable_a = True
                 self.chan_enable_left.config(background="#EA7870", text="Disable A")
             else:
-                self.chan_enable_right.config(background="#EA7870", text="Disable B")
-            self.start_tool(tool_one, awg_side)
-        else:
-            self.but_one.config(background="#B2D3BE", text="Start")
-            if awg_side == "a":
+                channel_enable_a = False
                 self.chan_enable_left.config(background="#B2D3BE", text="Enable A")
                 print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_enable_a, 0)}")
+        else:
+            global channel_enable_b
+            if channel_enable_b == False:
+                channel_enable_b = True
+                self.chan_enable_right.config(background="#EA7870", text="Disable b")
             else:
+                channel_enable_b = False
                 self.chan_enable_right.config(background="#B2D3BE", text="Enable B")
                 print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_enable_b, 0)}")
-            self.start_tool("no_tool", awg_side)
 
-    def start_two(self, awg_side):
+        if tool_one == "awg":
+            self.start_tool(tool_one, awg_side)
+        else:
+            self.start_tool(tool_two, awg_side)
+
+    def start_one(self):
+        if self.but_one["text"] == "Start":
+            self.but_one.config(background="#EA7870", text="Stop")
+            self.start_tool(tool_one, None)
+        else:
+            self.but_one.config(background="#B2D3BE", text="Start")
+            self.start_tool("no_tool", None)
+
+    def start_two(self):
         if self.but_two["text"] == "Start":
             self.but_two.config(background="#EA7870", text="Stop")
-            if awg_side == "a":
-                self.chan_enable_left.config(background="#EA7870", text="Disable A")
-            else:
-                self.chan_enable_right.config(background="#EA7870", text="Disable B")
-            self.start_tool(tool_two, awg_side)
+            self.start_tool(tool_two, None)
         else:
             self.but_two.config(background="#B2D3BE", text="Start")
-            if awg_side == "a":
-                self.chan_enable_left.config(background="#B2D3BE", text="Enable A")
-            else:
-                self.chan_enable_right.config(background="#B2D3BE", text="Enable B")
-            self.start_tool("no_tool", awg_side)
+            self.start_tool("no_tool", None)
 
     def start_tool(self, tool, awg_side):
         global pico
@@ -536,7 +539,6 @@ class MainPage(tk.Frame):
                 offset = int(np.interp(float(self.offset_left.get() if awg_side == "a" else self.offset_right.get()), awg_offset_gui, awg_offset_real))
                 phase = int(np.interp(float(self.phase_left.get() if awg_side == "a" else self.phase_right.get()), awg_phase_gui, awg_phase_real))
                 channel = int(0 if awg_side == "a" else 1)
-                print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_channel_number, channel)}")
                 if channel == 0:
                     enable_a = 1
                     print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_enable_a, enable_a)}")
@@ -549,8 +551,9 @@ class MainPage(tk.Frame):
                 print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_peak_to_peak, ptp)}")
                 print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_offset, offset)}")
                 print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_phase, phase)}")
-                pico.set_tool(ToolSelector.AWG)
+                print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_channel_number, channel)}")
 
+                pico.set_tool(ToolSelector.AWG)
             except:
                 print("VALUE IS NOT A FUCKING INT THIS TRY EXPECT SUCKS BTW CHANGE iT TO CHECK IF VALUES ARE INT NOT CHARACTERS")
         elif tool == "osc":
@@ -561,15 +564,16 @@ class MainPage(tk.Frame):
                 amp = self.amp.get()
                 ["100x", "10x", "1x", "0.1x"]
                 if (amp == "100x"):
-                    amp = 3
-                elif (amp == "10x"):
-                    amp = 2
-                elif (amp == "1x"):
-                    amp = 1
-                elif (amp == "0.1x"):
                     amp = 0
+                elif (amp == "10x"):
+                    amp = 1
+                elif (amp == "1x"):
+                    amp = 2
+                elif (amp == "0.1x"):
+                    amp = 3
                 else:
                     amp = -1
+                print(amp)
                 print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_adc_amplification, amp)}")
                 print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_direction, direction)}")
                 print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_trigger, trigger)}")

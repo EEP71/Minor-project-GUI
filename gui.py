@@ -30,6 +30,11 @@ root = None
 pico = None
 validation = None
 
+# color definition
+black = '#0F110D'
+grey = '#3B3D3a'
+yellow = '#FFFF21'
+
 ##### SA Global #####
 sa_capture_depth = 1000  # This is the default value of the pico
 sa_sample_rate   = 50000 # This is the default value of the pico
@@ -41,22 +46,23 @@ sa_sample_rate_real = [0, 500000]
 channel_enable_a = False
 channel_enable_b = False
 
-awg_duty_cycle_gui = [0, 100]
+awg_duty_cycle_gui = [0, 100] #%
 awg_duty_cycle_real = [0, 4095]
 
-awg_freq_real = [0, 50000]
+awg_freq_real = [0, 50000] #Hz
 
-awg_ptp_gui = [0.0, 5]
+awg_ptp_gui = [0, 5]
 awg_ptp_real = [0, 4095]
 
-awg_offset_gui = [-3.3, 3.3]
+awg_offset_gui = [-5, 5]
 awg_offset_real = [0, 8191]
 
 awg_phase_gui = [0, 360]
 awg_phase_real = [0, 4095]
 
 #### OSC Globals ####
-osc_trigger_real = [0, 3.3]
+osc_trigger_real = [0, 3000] #mV
+
 class MainView(tk.Frame):
     def __init__(self, pages, *args, **kwargs):
         tk.Frame.__init__(self, *args, **kwargs)
@@ -190,7 +196,8 @@ class MainPage(tk.Frame):
 
         fig_osc = plt.figure()
         ax_osc = fig_osc.add_subplot(1, 1, 1)
-        line_osc = plt.plot([],[])[0]
+        line_osc = plt.plot([],[], color = yellow)[0]
+        ax_osc.set_facecolor(black)
 
         def init_line_osc():
             line_osc.set_data(0, 0)
@@ -203,7 +210,7 @@ class MainPage(tk.Frame):
             if pico is not None:
                 x = range(0, sa_capture_depth // 2,1)
                 if (len(pico.get_scope_values()) == len(x)) and pico is not None:
-                    ax_osc.set_xlim(0, sa_capture_depth // 2)
+                    # print(pico.get_scope_values())
                     line_osc.set_data(x, pico.get_scope_values())
                 else:
                     line_osc.set_data(0, 0)
@@ -211,14 +218,31 @@ class MainPage(tk.Frame):
                 line_osc.set_data(0, 0)
             return line_osc,
 
+        # plot grid
+        ax_osc.grid(which = 'major',
+            ls = '-',
+            lw = 0.5,
+            color = grey)
+
+        # plot axes lines
+        # ax_osc.hlines(y = 0,
+        #             xmin = 0,
+        #             xmax = stop,
+        #             lw = 2,
+        #             colors = grey)
+        # ax_osc.vlines(x = time[int(span * i + (1 + span * displayed_period) / 2)],
+        #             ymin = 1.1 * signal.min(),
+        #             ymax = 1.1 * signal.max(),
+        #             lw = 2,
+        #             colors = grey)
+
         global canvas_osc
         canvas_osc = FigureCanvasTkAgg(fig_osc, master=root)
         plt.xlim(0, 500)
-        plt.ylim(0, 4095)
-        plt.xlabel('Time')
-        plt.ylabel('Volts')
+        plt.ylim(0, 4096)
+        plt.xlabel('mS')
+        plt.ylabel('mV')
         plt.title('Oscilloscope')
-        plt.autoscale(enable=True, axis='x')
         self.ani_scope =  matplotlib.animation.FuncAnimation(fig_osc, animate_oscilloscope, init_func=init_line_osc, interval=25, blit=False)
     #### END OSC ####
 
@@ -365,7 +389,7 @@ class MainPage(tk.Frame):
         self.trigger_text.configure(foreground="#F2F4D1")
 
         self.trigger = tk.Entry(self, width=30, validate="key", validatecommand=(validation, '%S'))
-        self.trigger.insert(0, "0")
+        self.trigger.insert(0, "1500")
 
         self.direction_text = tk.Label(self, text = "Direction", font = controller.paragraph_font)
         self.direction_text.configure(background="#5E6073")
@@ -376,17 +400,17 @@ class MainPage(tk.Frame):
         self.direction = ttk.Combobox(self, width=30, textvariable = self.selected_dir, values=dir_values, state="readonly")
         self.direction.current(0)
 
-        # self.sd_text_osc = tk.Label(self, text = "Seconds per division", font = controller.paragraph_font)
-        # self.sd_text_osc.configure(background="#5E6073")
-        # self.sd_text_osc.configure(foreground="#F2F4D1")
+        self.sd_text_osc = tk.Label(self, text = "Millisecond per division", font = controller.paragraph_font)
+        self.sd_text_osc.configure(background="#5E6073")
+        self.sd_text_osc.configure(foreground="#F2F4D1")
 
-        # self.sd_osc = tk.Entry(self, width=30)
+        self.sd_osc = tk.Entry(self, width=30, validate="key", validatecommand=(validation, '%S'))
 
-        # self.vd_text_osc = tk.Label(self, text = "Voltage per division", font = controller.paragraph_font)
-        # self.vd_text_osc.configure(background="#5E6073")
-        # self.vd_text_osc.configure(foreground="#F2F4D1")
+        self.vd_text_osc = tk.Label(self, text = "Millivolt per division", font = controller.paragraph_font)
+        self.vd_text_osc.configure(background="#5E6073")
+        self.vd_text_osc.configure(foreground="#F2F4D1")
 
-        # self.vd_osc = tk.Entry(self, width=30)
+        self.vd_osc = tk.Entry(self, width=30, validate="key", validatecommand=(validation, '%S'))
 
 # ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- #
 # SA
@@ -633,8 +657,10 @@ class MainPage(tk.Frame):
 
             elif tool == "osc":
                 try:
-                    trigger = int(np.interp(float(self.trigger.get()), [0, 3], [0, 3]))
-                    direction = float(1 if self.direction.get() == "Up" else 0)
+                    trigger = int(np.interp(float(self.trigger.get()), osc_trigger_real, osc_trigger_real))
+                    direction = int(1 if self.direction.get() == "Up" else 0)
+                    sd_osc = int(self.sd_osc.get())
+                    vd_osc = int(self.vd_osc.get())
 
                     amp = self.amp.get()
                     ["100x", "10x", "1x", "0.1x"]
@@ -648,7 +674,6 @@ class MainPage(tk.Frame):
                         amp = 3
                     else:
                         amp = -1
-                    print(amp)
                     print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_adc_amplification, amp)}")
                     print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_direction, direction)}")
                     print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_trigger, trigger)}")
@@ -707,24 +732,26 @@ class MainPage(tk.Frame):
                 pico.set_tool(ToolSelector.AWG)
             except:
                 print("VALUE IS NOT A FUCKING INT THIS TRY EXPECT SUCKS BTW CHANGE iT TO CHECK IF VALUES ARE INT NOT CHARACTERS")
-        elif tool == "osc":
+        elif tool == "osc": # GOOD OSCILLOSCOPE
             try:
-                trigger = int(np.interp(float(self.trigger.get()), [0, 3], [0, 3]))
+                trigger = int(np.interp(float(self.trigger.get()), osc_trigger_real, osc_trigger_real))
                 direction = float(1 if self.direction.get() == "Up" else 0)
+                sd_osc = int(np.interp(float(self.sd_osc.get()), [1, 10], []))
+                vd_osc = float(self.vd_osc.get())
+                plt.axis([0, 120, 0, 4096])
 
                 amp = self.amp.get()
                 ["100x", "10x", "1x", "0.1x"]
                 if (amp == "100x"):
-                    amp = 0
-                elif (amp == "10x"):
-                    amp = 1
-                elif (amp == "1x"):
-                    amp = 2
-                elif (amp == "0.1x"):
                     amp = 3
+                elif (amp == "10x"):
+                    amp = 2
+                elif (amp == "1x"):
+                    amp = 1
+                elif (amp == "0.1x"):
+                    amp = 0
                 else:
                     amp = -1
-                print(amp)
                 print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_adc_amplification, amp)}")
                 print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_direction, direction)}")
                 print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_trigger, trigger)}")
@@ -732,7 +759,6 @@ class MainPage(tk.Frame):
             except:
                 print("VALUE IS NOT A FUCKING INT THIS TRY EXPECT SUCKS BTW CHANGE iT TO CHECK IF VALUES ARE INT NOT CHARACTERS")
         else:
-            print("no tool")
             pico.set_tool(ToolSelector.no_tool)
 
     def swap_buttons(self, tool, side):
@@ -788,10 +814,10 @@ class MainPage(tk.Frame):
             self.trigger.place(x=-200, y=-200)
             self.direction_text.place(x=-200, y=-200)
             self.direction.place(x=-200, y=-200)
-            # self.sd_text_osc.place(x=-200, y=-200)
-            # self.sd_osc.place(x=-200, y=-200)
-            # self.vd_text_osc.place(x=-200, y=-200)
-            # self.vd_osc.place(x=-200, y=-200)
+            self.sd_text_osc.place(x=-200, y=-200)
+            self.sd_osc.place(x=-200, y=-200)
+            self.vd_text_osc.place(x=-200, y=-200)
+            self.vd_osc.place(x=-200, y=-200)
 
         if tool_two != "sa" and tool_two != "sa":
             canvas_sa.get_tk_widget().place(x=-2000, y=-2000, height=900, width=1200)
@@ -844,10 +870,10 @@ class MainPage(tk.Frame):
             self.trigger.place(x=(width / 2) - ( self.trigger.winfo_reqwidth() / 2) + 600, y=150 + height / 2 * side)
             self.direction_text.place(x=(width / 2) - (self.direction_text.winfo_reqwidth() / 2) + 600, y=180 + height / 2 * side)
             self.direction.place(x=(width / 2) - ( self.direction.winfo_reqwidth() / 2) + 600, y=210 + height / 2 * side)
-            # self.sd_text_osc.place(x=(width / 2) - (self.sd_text_osc.winfo_reqwidth() / 2) + 600, y=240 + height / 2 * side)
-            # self.sd_osc.place(x=(width / 2) - ( self.sd_osc.winfo_reqwidth() / 2) + 600, y=270 + height / 2 * side)
-            # self.vd_text_osc.place(x=(width / 2) - (self.vd_text_osc.winfo_reqwidth() / 2) + 600, y=300 + height / 2 * side)
-            # self.vd_osc.place(x=(width / 2) - ( self.vd_osc.winfo_reqwidth() / 2) + 600, y=330 + height / 2 * side)
+            self.sd_text_osc.place(x=(width / 2) - (self.sd_text_osc.winfo_reqwidth() / 2) + 600, y=240 + height / 2 * side)
+            self.sd_osc.place(x=(width / 2) - ( self.sd_osc.winfo_reqwidth() / 2) + 600, y=270 + height / 2 * side)
+            self.vd_text_osc.place(x=(width / 2) - (self.vd_text_osc.winfo_reqwidth() / 2) + 600, y=300 + height / 2 * side)
+            self.vd_osc.place(x=(width / 2) - ( self.vd_osc.winfo_reqwidth() / 2) + 600, y=330 + height / 2 * side)
         elif tool == "sa":
             canvas_sa.get_tk_widget().place(x=0, y=0, height=900, width=1200)
             canvas_osc.get_tk_widget().place(x=-2000, y=-2000, height=900, width=1200)

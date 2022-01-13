@@ -94,8 +94,9 @@ class PicoCom:
         self.tool_select =  ToolSelector.no_tool
         self.SA_values =    np.empty([0, 0], dtype=np.float32)
         self.scope_values = np.empty([0, 0], dtype=np.float32)
-        self.communication_speed_hz = 10 #Reading speed in HZ from the pi pico 10hz works for sure
+        self.communication_speed_hz = 1 #Reading speed in HZ from the pi pico 10hz works for sure
         self.capture_depth = 1
+        self.speed_test_bytes_per_second = 1
         self._init_pico_threads()
         self._usb_speed_test()
 
@@ -146,10 +147,12 @@ class PicoCom:
             self.tool_select = 0
         elif self.tool_select == ToolSelector.SA:
             self._stop_all_threads()
+            self.communication_speed_hz = 1
             self.SA_thread_event.set()
             self.tool_select = 0
         elif self.tool_select == ToolSelector.scope:
             self._stop_all_threads()
+            self.communication_speed_hz = 1
             self.scope_thread_event.set()
             self.tool_select = 0
         elif self.tool_select == ToolSelector.AWG_and_scope:
@@ -286,14 +289,16 @@ class PicoCom:
             self._send_data_to_pico(ToolSelector.SA.value)
             time.sleep(1/self.communication_speed_hz)
             raw_data = self._get_data_from_pico()
+            size_of_sa_values = sys.getsizeof(raw_data)
+            seconds = size_of_sa_values /self.speed_test_bytes_per_second
+            if int(1 // seconds) < 45:
+                self.communication_speed_hz = int(1 // seconds)
             try:
                 if (raw_data != 0):
                     decoded_data = raw_data.decode()
                     mapped_data = map(float, decoded_data.rstrip("\n").rstrip("\r").split(",")[:-1])
                     SA_values_array = np.fromiter(mapped_data, dtype=np.float32)
                     SA_log_scale = np.log10(np.sqrt(SA_values_array) / self.capture_depth) * 10
-                    highest_value = np.amax(SA_log_scale)
-                    lowest_value = np.amin(SA_log_scale)
                     self.SA_values = SA_log_scale
             except:
                 print("SOrry zal dit fixe")
@@ -324,6 +329,10 @@ class PicoCom:
             self._send_data_to_pico(ToolSelector.scope.value)
             time.sleep(1/self.communication_speed_hz)
             raw_data = self._get_data_from_pico()
+            size_of_sa_values = sys.getsizeof(raw_data)
+            seconds = size_of_sa_values /self.speed_test_bytes_per_second
+            if int(1 // seconds) < 25:
+                self.communication_speed_hz = int(1 // seconds)
             try:
                 if (raw_data != 0):
                     decoded_data = raw_data.decode()
@@ -362,14 +371,14 @@ class PicoCom:
         return sample_rate_value
 
     def _usb_speed_test(self):
-        print("The speedtest will take about 10 seconds be patient")
+        print("The speedtest will take about 0.19 seconds be patient")
         self.set_tool(ToolSelector.change_settings)
         self._send_data_to_pico(ToolSelector.change_settings.value)
         self._send_data_to_pico(SettingsSelector.speed_test.value)
 
 
         start_time = time.time()
-        speedtest_data = self.serial_com.read(1000000)
+        speedtest_data = self.serial_com.read(10000)
         end_time = time.time()
 
         size_bytes_received = sys.getsizeof(speedtest_data)
@@ -378,6 +387,7 @@ class PicoCom:
         print (f"My program took {time_formatted} seconds to receive {size_bytes_received} bytes")
         bytes_per_second = int(size_bytes_received / time_to_receive)
         print (f" {bytes_per_second} Bytes/s")
+        self.speed_test_bytes_per_second = bytes_per_second
         bits_received = size_bytes_received * 8
         bits_per_second = int(bits_received / time_to_receive)
         print (f" {bits_per_second} Bits/s")

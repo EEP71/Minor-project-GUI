@@ -34,7 +34,7 @@ validation = None
 sa_capture_depth = 1000  # This is the default value of the pico
 sa_sample_rate   = 50000 # This is the default value of the pico
 
-sa_capture_depth_real = [0, 1000]
+sa_capture_depth_real = [0, 2500]
 sa_sample_rate_real = [0, 500000]
 
 ##### AWG Globals #####
@@ -161,6 +161,7 @@ class MainPage(tk.Frame):
             global x
             global pico
             if pico is not None:
+
                 x = range(0,int(sa_sample_rate/2),int(sa_sample_rate/sa_capture_depth))
                 if (len(pico.get_SA_values()) == len(x)) and pico is not None:
                     ax_sa.set_xlim(0, sa_sample_rate/2+1)
@@ -184,7 +185,7 @@ class MainPage(tk.Frame):
         plt.ylabel('Amplitude')
         plt.title('Spectrum analyser')
         plt.autoscale(enable=True, axis='x')
-        self.ani =  matplotlib.animation.FuncAnimation(fig_sa, animate_spectrum_analyser, init_func=init_line_sa, interval=25, blit=False)
+        self.ani_sa =  matplotlib.animation.FuncAnimation(fig_sa, animate_spectrum_analyser, init_func=init_line_sa, interval=25, blit=False)
     ##### END SA #####
 
         fig_osc = plt.figure()
@@ -200,9 +201,9 @@ class MainPage(tk.Frame):
             global x
             global pico
             if pico is not None:
-                x = range(0,500,1)
+                x = range(0, sa_capture_depth // 2,1)
                 if (len(pico.get_scope_values()) == len(x)) and pico is not None:
-
+                    ax_osc.set_xlim(0, sa_capture_depth // 2)
                     line_osc.set_data(x, pico.get_scope_values())
                 else:
                     line_osc.set_data(0, 0)
@@ -218,7 +219,7 @@ class MainPage(tk.Frame):
         plt.ylabel('Volts')
         plt.title('Oscilloscope')
         plt.autoscale(enable=True, axis='x')
-        self.ani =  matplotlib.animation.FuncAnimation(fig_osc, animate_oscilloscope, init_func=init_line_osc, interval=25, blit=False)
+        self.ani_scope =  matplotlib.animation.FuncAnimation(fig_osc, animate_oscilloscope, init_func=init_line_osc, interval=25, blit=False)
     #### END OSC ####
 
 # ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- #

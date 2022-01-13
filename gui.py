@@ -565,122 +565,7 @@ class MainPage(tk.Frame):
         global pico
         global sa_capture_depth
         global sa_sample_rate
-        if (tool_one == "awg" and tool_two == "sa") or (tool_one == "sa" and tool_two == "awg"):
-            pico.set_tool(ToolSelector.no_tool)
-            if tool == "sa":
-                try:
-                    capture_depth_value = int(np.ceil(np.interp(float(self.capture_depth.get()), sa_capture_depth_real, sa_capture_depth_real) / 2.) * 2)
-                    sample_rate = int(np.interp(float(self.sample_rate.get()), sa_sample_rate_real, sa_sample_rate_real))
-                    print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_adc_sample_rate, sample_rate)}")
-                    print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_adc_capture_depth, capture_depth_value)}")
-                    sa_sample_rate = int(pico.get_setting(SettingsSelector.get_adc_sample_rate))
-                    sa_capture_depth = int(pico.get_setting(SettingsSelector.get_adc_capture_depth))
-                    print(f"MESSAGE FROM PICO: Get adc caputre depth = {sa_capture_depth}")
-                    print(f"MESSAGE FROM PICO: Get adc sample rate {sa_sample_rate}")
-                    pico.set_capture_depth(sa_capture_depth)
-                except:
-                    print("VALUE IS NOT A FUCKING INT THIS TRY EXPECT SUCKS BTW CHANGE iT TO CHECK IF VALUES ARE INT NOT CHARACTERS")
-            elif tool == "awg":
-                try:
-                    wave_type = self.slected_wave_left.get() if awg_side == "a" else self.selected_wave_right.get()
-                    if (wave_type == "Sine"):
-                        wave_type = 0
-                    elif (wave_type == "Square"):
-                        wave_type = 1
-                    elif (wave_type == "Pulse"):
-                        wave_type = 2
-                    elif (wave_type == "Saw"):
-                        wave_type = 3
-                    elif (wave_type == "Triangle"):
-                        wave_type = 4
-                    else:
-                        wave_type = -1
-                    duty_cycle = int(np.interp(float(self.dc_left.get() if awg_side == "a" else self.dc_right.get()), awg_duty_cycle_gui, awg_duty_cycle_real))
-                    freq = int(np.interp(float(self.freq_left.get() if awg_side == "a" else self.freq_right.get()), awg_freq_real, awg_freq_real))
-                    ptp = int(np.interp(float(self.ptp_left.get() if awg_side == "a" else self.ptp_right.get()), awg_ptp_gui, awg_ptp_real))
-                    offset = int(np.interp(float(self.offset_left.get() if awg_side == "a" else self.offset_right.get()), awg_offset_gui, awg_offset_real))
-                    phase = int(np.interp(float(self.phase_left.get() if awg_side == "a" else self.phase_right.get()), awg_phase_gui, awg_phase_real))
-                    channel = int(0 if awg_side == "a" else 1)
-                    if channel == 0:
-                        enable_a = 1
-                        print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_enable_a, enable_a)}")
-                    else:
-                        enable_b = 1
-                        print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_enable_b, enable_b)}")
-                    print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_wave_type, wave_type)}")
-                    print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_duty_cycle, duty_cycle)}")
-                    print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_dac_freq, freq)}")
-                    print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_peak_to_peak, ptp)}")
-                    print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_offset, offset)}")
-                    print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_phase, phase)}")
-                    print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_channel_number, channel)}")
-                except:
-                    print("VALUE IS NOT A FUCKING INT THIS TRY EXPECT SUCKS BTW CHANGE iT TO CHECK IF VALUES ARE INT NOT CHARACTERS")
-                pico.set_tool(ToolSelector.AWG_and_SA)
-        elif (tool_one == "awg" and tool_two == "osc") or (tool_one == "osc" and tool_two == "awg"):
-            if tool == "awg":
-                try:
-                    wave_type = self.slected_wave_left.get() if awg_side == "a" else self.selected_wave_right.get()
-                    if (wave_type == "Sine"):
-                        wave_type = 0
-                    elif (wave_type == "Square"):
-                        wave_type = 1
-                    elif (wave_type == "Pulse"):
-                        wave_type = 2
-                    elif (wave_type == "Saw"):
-                        wave_type = 3
-                    elif (wave_type == "Triangle"):
-                        wave_type = 4
-                    else:
-                        wave_type = -1
-                    duty_cycle = int(np.interp(float(self.dc_left.get() if awg_side == "a" else self.dc_right.get()), awg_duty_cycle_gui, awg_duty_cycle_real))
-                    freq = int(np.interp(float(self.freq_left.get() if awg_side == "a" else self.freq_right.get()), awg_freq_real, awg_freq_real))
-                    ptp = int(np.interp(float(self.ptp_left.get() if awg_side == "a" else self.ptp_right.get()), awg_ptp_gui, awg_ptp_real))
-                    offset = int(np.interp(float(self.offset_left.get() if awg_side == "a" else self.offset_right.get()), awg_offset_gui, awg_offset_real))
-                    phase = int(np.interp(float(self.phase_left.get() if awg_side == "a" else self.phase_right.get()), awg_phase_gui, awg_phase_real))
-                    channel = int(0 if awg_side == "a" else 1)
-                    if channel == 0:
-                        enable_a = 1
-                        print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_enable_a, enable_a)}")
-                    else:
-                        enable_b = 1
-                        print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_enable_b, enable_b)}")
-                    print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_wave_type, wave_type)}")
-                    print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_duty_cycle, duty_cycle)}")
-                    print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_dac_freq, freq)}")
-                    print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_peak_to_peak, ptp)}")
-                    print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_offset, offset)}")
-                    print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_phase, phase)}")
-                    print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_channel_number, channel)}")
-                except:
-                    print("VALUE IS NOT A FUCKING INT THIS TRY EXPECT SUCKS BTW CHANGE iT TO CHECK IF VALUES ARE INT NOT CHARACTERS")
-
-            elif tool == "osc":
-                try:
-                    trigger = int(np.interp(float(self.trigger.get()), osc_trigger_real, osc_trigger_real))
-                    direction = int(1 if self.direction.get() == "Up" else 0)
-                    sd_osc = int(self.sd_osc.get())
-                    vd_osc = int(self.vd_osc.get())
-
-                    amp = self.amp.get()
-                    ["100x", "10x", "1x", "0.1x"]
-                    if (amp == "100x"):
-                        amp = 0
-                    elif (amp == "10x"):
-                        amp = 1
-                    elif (amp == "1x"):
-                        amp = 2
-                    elif (amp == "0.1x"):
-                        amp = 3
-                    else:
-                        amp = -1
-                    print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_adc_amplification, amp)}")
-                    print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_direction, direction)}")
-                    print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_trigger, trigger)}")
-                except:
-                    print("VALUE IS NOT A FUCKING INT THIS TRY EXPECT SUCKS BTW CHANGE iT TO CHECK IF VALUES ARE INT NOT CHARACTERS")
-                pico.set_tool(ToolSelector.AWG_and_scope)
-        elif tool == "sa":
+        if tool == "sa":
             try:
                 capture_depth_value = int(np.ceil(np.interp(float(self.capture_depth.get()), sa_capture_depth_real, sa_capture_depth_real) / 2.) * 2)
                 sample_rate = int(np.interp(float(self.sample_rate.get()), sa_sample_rate_real, sa_sample_rate_real))
@@ -732,12 +617,12 @@ class MainPage(tk.Frame):
                 pico.set_tool(ToolSelector.AWG)
             except:
                 print("VALUE IS NOT A FUCKING INT THIS TRY EXPECT SUCKS BTW CHANGE iT TO CHECK IF VALUES ARE INT NOT CHARACTERS")
-        elif tool == "osc": # GOOD OSCILLOSCOPE
+        elif tool == "osc":
             try:
                 trigger = int(np.interp(float(self.trigger.get()), osc_trigger_real, osc_trigger_real))
                 direction = float(1 if self.direction.get() == "Up" else 0)
-                sd_osc = int(np.interp(float(self.sd_osc.get()), [1, 10], []))
-                vd_osc = float(self.vd_osc.get())
+                sd_osc = int(self.sd_osc.get())
+                vd_osc = int(self.vd_osc.get())
                 plt.axis([0, 120, 0, 4096])
 
                 amp = self.amp.get()

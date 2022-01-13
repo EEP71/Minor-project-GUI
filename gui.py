@@ -177,12 +177,12 @@ class MainPage(tk.Frame):
 
         global canvas_sa
         canvas_sa = FigureCanvasTkAgg(fig_sa, master=root)
-        ax_sa.set_yticklabels([])
+        # ax_sa.set_yticklabels([])
         # plt.xlim(0, 500000/2+1) ## THIS IS THE MAX WINDOW FOR DE INTERNAL ADC
         plt.xlim(0, sa_sample_rate/2+1)
         plt.ylim(-20, 30)
         plt.xlabel('Frequency')
-        plt.ylabel('Amplitude')
+        plt.ylabel('dB')
         plt.title('Spectrum analyser')
         plt.autoscale(enable=True, axis='x')
         self.ani_sa =  matplotlib.animation.FuncAnimation(fig_sa, animate_spectrum_analyser, init_func=init_line_sa, interval=25, blit=False)

@@ -1,0 +1,1318 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>pico_com API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>pico_com</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">import serial
+import time
+import threading
+from enum import Enum
+import numpy as np
+import sys
+
+class ToolSelector(Enum):
+    &#34;&#34;&#34;
+    Tool selector enum for selecting the tools
+    &#34;&#34;&#34;
+    AWG = b&#39;1&#39; # Arbitrary waveform generator 
+    LIA = b&#39;2&#39; # Lock-in amplifier
+    SA = b&#39;3&#39;  # Spectrum analyser
+    scope = b&#39;4&#39; # Oscilloscope
+    AWG_and_scope = b&#39;5&#39; # Arbitrary waveform generator and Oscilloscope
+    AWG_and_LIA = b&#39;6&#39; # Arbitrary waveform generator and Lock-in amplifier
+    AWG_and_SA = b&#39;7&#39; # Arbitrary waveform generator and Spectrum analyser
+    change_settings = b&#39;8&#39; # Change toolbox settings
+    toolbox_values = b&#39;9&#39; # Get values from toolbox
+    no_tool = b&#39;0&#39; # Terminate program
+
+class SettingsSelector(Enum):
+    &#34;&#34;&#34;
+    Settings selector enum for selecting the settings
+    &#34;&#34;&#34;
+    set_adc_capture_depth   = b&#39;a&#39;
+    set_adc_sample_rate     = b&#39;b&#39;
+    set_adc_amplification   = b&#39;c&#39;
+    set_channel_number      = b&#39;d&#39;
+
+    set_awg_wave_type       = b&#39;e&#39;
+    set_dac_freq            = b&#39;f&#39;
+    set_dac_channel_number  = b&#39;g&#39;
+    set_peak_to_peak        = b&#39;h&#39;
+    set_awg_offset          = b&#39;i&#39;
+
+    set_mSeconds_per_dev    = b&#39;j&#39;
+    set_trigger             = b&#39;k&#39;
+    set_direction           = b&#39;l&#39;
+    set_mVolt_per_DIV       = b&#39;m&#39;
+
+    get_adc_capture_depth   = b&#39;n&#39;
+    get_adc_sample_rate     = b&#39;o&#39;
+    set_awg_duty_cycle      = b&#39;p&#39;
+    set_awg_phase           = b&#39;q&#39;
+    set_awg_enable_a        = b&#39;r&#39;
+    set_awg_enable_b        = b&#39;s&#39;
+    speed_test              = b&#39;t&#39;
+
+class PicoCom:
+
+    &#34;&#34;&#34;
+    A class used to communicate with the Pico toolbox. Don&#39;t use the attributes to change stuff use the methods instead!
+
+    ...
+
+    Attributes
+    ----------
+    SA_values : np.ndarray of np.float32
+        ndarray of values from the spectrum analyser
+    scope_values : np.ndarray of np.float32
+        ndarray of values from the oscilloscope
+    communication_speed_hz : int
+        Communication speed in Hz (default 10)
+    serial_com : serial.Serial()
+        Serial communication class, never change this!!
+    SA_thread_event : threading.Event()
+        Spectrum analyser threading event, never change this!!
+    LIA_thread_event : threading.Event()
+        LIA threading event, never change this!!
+    scope_thread_event : threading.Event()
+        Oscilloscope threading event, never change this!!
+    AWG_thread_event : threading.Event()
+        AWG threading event, never change this!!
+    tool_select : ToolSelector
+        Current selected tool, never change this!!
+
+
+    &#34;&#34;&#34;
+    def __init__(self, com: str):
+        &#34;&#34;&#34;
+        ...
+
+        Parameters
+        ----------
+        com : str
+            Serial communication port to use for the Pico toolbox
+        &#34;&#34;&#34;
+        self.serial_com      = serial.Serial(com)
+        self.SA_thread_event = threading.Event()
+        self.LIA_thread_event = threading.Event()
+        self.scope_thread_event = threading.Event()
+        self.tool_select =  ToolSelector.no_tool
+        self.SA_values =    np.empty([0, 0], dtype=np.float32)
+        self.scope_values = np.empty([0, 0], dtype=np.float32)
+        self.communication_speed_hz = 1 #Reading speed in HZ from the pi pico 10hz works for sure
+        self.capture_depth = 1
+        self.speed_test_bytes_per_second = 1
+        self._init_pico_threads()
+        self._usb_speed_test()
+
+    def _init_pico_threads(self):
+        &#34;&#34;&#34; Initialize communication threads&#34;&#34;&#34;
+
+        SA_thread        = threading.Thread(target=self._SA_thread, args=(self.SA_thread_event,))
+        SA_thread.name   = &#34;FFT_thread&#34;
+        SA_thread.daemon = True
+        self.SA_thread_event.clear()
+        SA_thread.start()
+
+        LIA_thread        = threading.Thread(target=self._lia_thread, args=(self.LIA_thread_event,))
+        LIA_thread.name   = &#34;LIA_thread&#34;
+        LIA_thread.daemon = True
+        self.LIA_thread_event.clear()
+        LIA_thread.start()
+
+        scope_thread        = threading.Thread(target=self._scope_thread, args=(self.scope_thread_event,))
+        scope_thread.name   = &#34;scope_thread&#34;
+        scope_thread.daemon = True
+        self.LIA_thread_event.clear()
+        scope_thread.start()
+
+    def _select_command(self, selector):
+        &#34;&#34;&#34;Selects the command from set_tool()
+        &#34;&#34;&#34;
+        if self.tool_select == ToolSelector.no_tool:
+            self._stop_all_threads()
+            self._send_data_to_pico(ToolSelector.no_tool.value)
+            self.tool_select = 0
+        elif self.tool_select == ToolSelector.AWG:
+            self._stop_all_threads()
+            self._send_data_to_pico(ToolSelector.AWG.value)
+            self.tool_select = 0
+        elif self.tool_select == ToolSelector.LIA:
+            self._stop_all_threads()
+            self.LIA_thread_event.set()
+            self.tool_select = 0
+        elif self.tool_select == ToolSelector.SA:
+            self._stop_all_threads()
+            self.communication_speed_hz = 1
+            self.SA_thread_event.set()
+            self.tool_select = 0
+        elif self.tool_select == ToolSelector.scope:
+            self._stop_all_threads()
+            self.communication_speed_hz = 1
+            self.scope_thread_event.set()
+            self.tool_select = 0
+        elif self.tool_select == ToolSelector.AWG_and_scope:
+            self._stop_all_threads()
+            self._send_data_to_pico(ToolSelector.AWG_and_scope.value)
+            self.tool_select = 0
+        elif self.tool_select == ToolSelector.AWG_and_LIA:
+            self._stop_all_threads()
+            print(&#34;AWG_and_LIA&#34;)
+            self.tool_select = 0
+        elif self.tool_select == ToolSelector.AWG_and_SA:
+            self._stop_all_threads()
+            self._send_data_to_pico(ToolSelector.AWG_and_SA.value)
+            self.tool_select = 0
+        elif self.tool_select == ToolSelector.change_settings:
+            self._stop_all_threads()
+            self.tool_select = 0
+        elif self.tool_select == ToolSelector.toolbox_values:
+            self._stop_all_threads()
+            self.tool_select = 0
+        else:
+            pass
+
+    def set_setting(self, setting: SettingsSelector, value: int) -&gt; str:
+        &#34;&#34;&#34;
+        Sets the given value to the given setting on the Pico Toolbox
+        ...
+        Parameters
+        ----------
+        setting : SettingsSelector
+            The setting which needs to be changed
+        value : int
+            The value that the setting will be set to
+        &#34;&#34;&#34;
+        self.set_tool(ToolSelector.change_settings)
+        self._send_data_to_pico(ToolSelector.change_settings.value)
+        self._send_data_to_pico(setting.value)
+        if setting == SettingsSelector.set_adc_sample_rate:
+            value = self._sample_rate_to_clock_devide(value)
+        self._send_data_to_pico((str(value) + &#39;\n&#39; ).encode())
+        time.sleep(0.1)
+        try:
+            return self._get_data_from_pico().decode()
+        except:
+            return self._get_data_from_pico()
+
+
+    def get_setting(self, setting: SettingsSelector) -&gt; str:
+        &#34;&#34;&#34;
+        Sets the given value to the given setting on the Pico Toolbox
+
+        ...
+
+        Parameters
+        ----------
+        setting : SettingsSelector
+            The setting you want to receive
+        &#34;&#34;&#34;
+        self.set_tool(ToolSelector.change_settings)
+        self._send_data_to_pico(ToolSelector.change_settings.value)
+        self._send_data_to_pico(setting.value)
+        time.sleep(0.1)
+        try:
+            if setting == SettingsSelector.get_adc_sample_rate:
+                value = self._get_data_from_pico().decode()
+                value = self._clock_devide_to_sample_rate(value)
+                return value
+            else:
+                return self._get_data_from_pico().decode()
+        except:
+            if setting == SettingsSelector.set_adc_sample_rate:
+                value = str(self._get_data_from_pico())
+                value = self._clock_devide_to_sample_rate(value)
+                return value
+            else:
+                return self._get_data_from_pico()
+
+
+    def set_tool(self, tool: ToolSelector):
+        &#34;&#34;&#34;
+        Sets the given tool on the Pico Toolbox
+
+        ...
+
+        Parameters
+        ----------
+        tool : ToolSelector 
+            The setting which needs to be changed
+        &#34;&#34;&#34;
+        self.tool_select = tool
+        self._select_command(self.tool_select)
+
+    def get_SA_values(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;
+        Returns the latest spectrum analyser values
+
+        ...
+
+        Returns
+        ----------
+        SA_values : np.ndarray of np.float32
+            The latest spectrum analyser values from the Pico toolbox
+        &#34;&#34;&#34;
+        return self.SA_values
+
+    def get_scope_values(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;
+        Returns the latest oscilloscope values
+
+        ...
+
+        Returns
+        ----------
+        scope_values : np.ndarray of np.float32
+            The latest oscilloscope values from the Pico toolbox
+        &#34;&#34;&#34;
+        return self.scope_values
+
+    def _send_data_to_pico(self, data):
+        &#34;Sends data to the pico Toolbox buffer&#34;
+        self.serial_com.write(data)
+
+    def _get_data_from_pico(self):
+        &#34;Reads data buffer from the Pico toolbox&#34;
+        data_str = 0
+        while (self.serial_com.in_waiting &gt; 0):
+            data_str = self.serial_com.read(self.serial_com.in_waiting)
+        return data_str
+
+    def _SA_thread(self, e):
+        &#34;SA thread that gets the SA values from the Pico toolbox and converts data to numpy array&#34;
+        while True:
+            e.wait()
+            self._send_data_to_pico(ToolSelector.SA.value)
+            time.sleep(1/self.communication_speed_hz)
+            raw_data = self._get_data_from_pico()
+            size_of_sa_values = sys.getsizeof(raw_data)
+            seconds = size_of_sa_values /self.speed_test_bytes_per_second
+            if int(1 // seconds) &lt; 45:
+                self.communication_speed_hz = int(1 // seconds)
+            try:
+                if (raw_data != 0):
+                    decoded_data = raw_data.decode()
+                    mapped_data = map(float, decoded_data.rstrip(&#34;\n&#34;).rstrip(&#34;\r&#34;).split(&#34;,&#34;)[:-1])
+                    SA_values_array = np.fromiter(mapped_data, dtype=np.float32)
+                    SA_log_scale = np.log10(np.sqrt(SA_values_array) / self.capture_depth) * 10
+                    self.SA_values = SA_log_scale
+            except:
+                print(&#34;SOrry zal dit fixe&#34;)
+
+
+    def set_capture_depth(self, capture_depth: int):
+        &#34;&#34;&#34;
+        Sets capture depth, important for spectrum analyzer fft plot set this for a better plot
+
+        ...
+
+        Parameters
+        ----------
+        capture_depth : int
+            The capture depth to change after chaning capture depth in settings.
+        &#34;&#34;&#34;
+        self.capture_depth = capture_depth
+    def _lia_thread(self, e):
+        &#34;LIA thread&#34;
+        while True:
+            e.wait()
+            print(&#34;LIA THREAD RUNNING&#34;)
+
+    def _scope_thread(self, e):
+        &#34;Scope thread that gets the scope values from the Pico toolbox and converts data to numpy array&#34;
+        while True:
+            e.wait()
+            self._send_data_to_pico(ToolSelector.scope.value)
+            time.sleep(1/self.communication_speed_hz)
+            raw_data = self._get_data_from_pico()
+            size_of_sa_values = sys.getsizeof(raw_data)
+            seconds = size_of_sa_values /self.speed_test_bytes_per_second
+            if int(1 // seconds) &lt; 25:
+                self.communication_speed_hz = int(1 // seconds)
+            try:
+                if (raw_data != 0):
+                    decoded_data = raw_data.decode()
+                    mapped_data = map(int, decoded_data.rstrip(&#34;  &#34;).rstrip(&#34;\r&#34;).split(&#34;,&#34;)[:-1])
+                    self.scope_values = np.fromiter(mapped_data, dtype=int)
+            except:
+                print(&#34;SOrry zal dit fixe&#34;)
+
+    def _stop_all_threads(self):
+        &#34;pauses all running threads&#34;
+        self.SA_thread_event.clear()
+        self.LIA_thread_event.clear()
+        self.scope_thread_event.clear()
+
+
+
+    def _sample_rate_to_clock_devide(self, sample_rate: int)-&gt; int:
+        &#34;&#34;&#34;
+        Convert sample rate value to clock devide that is used in the Pico]
+
+        Parameters
+        ----------
+        sample_rate : int
+            sample_rate
+
+        Returns
+        ----------
+        clock_devide_value : int
+            Clock devide
+        &#34;&#34;&#34;
+        clock_devide_value = 48000000//int(sample_rate)
+        return clock_devide_value
+
+
+    def _clock_devide_to_sample_rate(self, clock_devide: int)-&gt; int:
+        &#34;&#34;&#34;
+        Convert clock devide to sample rate
+
+        Parameters
+        ----------
+        sample_rate : int
+            sample_rate
+
+        Returns
+        ----------
+        clock_devide_value : int
+            Clock devide
+        &#34;&#34;&#34;
+        sample_rate_value = 48000000//int(clock_devide)
+        return sample_rate_value
+
+    def _usb_speed_test(self):
+        &#34;&#34;&#34;
+        Starts the USB speed test to change the read speed of the communication
+        &#34;&#34;&#34;
+        print(&#34;The speedtest will take about 0.19 seconds be patient&#34;)
+        self.set_tool(ToolSelector.change_settings)
+        self._send_data_to_pico(ToolSelector.change_settings.value)
+        self._send_data_to_pico(SettingsSelector.speed_test.value)
+
+
+        start_time = time.time()
+        speedtest_data = self.serial_com.read(10000)
+        end_time = time.time()
+
+        size_bytes_received = sys.getsizeof(speedtest_data)
+        time_to_receive = end_time - start_time
+        time_formatted = &#34;{:.2f}&#34;.format(time_to_receive)
+        print (f&#34;My program took {time_formatted} seconds to receive {size_bytes_received} bytes&#34;)
+        bytes_per_second = int(size_bytes_received / time_to_receive)
+        print (f&#34; {bytes_per_second} Bytes/s&#34;)
+        self.speed_test_bytes_per_second = bytes_per_second
+        bits_received = size_bytes_received * 8
+        bits_per_second = int(bits_received / time_to_receive)
+        print (f&#34; {bits_per_second} Bits/s&#34;)
+        mBits_received = size_bytes_received / 125000
+        mBits_per_second = mBits_received / time_to_receive
+        mBits_per_second_formatted = &#34;{:.2f}&#34;.format(mBits_per_second)
+        print (f&#34; {mBits_per_second_formatted} mBits/s&#34;)</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="pico_com.PicoCom"><code class="flex name class">
+<span>class <span class="ident">PicoCom</span></span>
+<span>(</span><span>com: str)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>A class used to communicate with the Pico toolbox. Don't use the attributes to change stuff use the methods instead!</p>
+<p>&hellip;</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>SA_values</code></strong> :&ensp;<code>np.ndarray</code> of <code>np.float32</code></dt>
+<dd>ndarray of values from the spectrum analyser</dd>
+<dt><strong><code>scope_values</code></strong> :&ensp;<code>np.ndarray</code> of <code>np.float32</code></dt>
+<dd>ndarray of values from the oscilloscope</dd>
+<dt><strong><code>communication_speed_hz</code></strong> :&ensp;<code>int</code></dt>
+<dd>Communication speed in Hz (default 10)</dd>
+<dt><strong><code>serial_com</code></strong> :&ensp;<code>serial.Serial()</code></dt>
+<dd>Serial communication class, never change this!!</dd>
+<dt><strong><code>SA_thread_event</code></strong> :&ensp;<code>threading.Event()</code></dt>
+<dd>Spectrum analyser threading event, never change this!!</dd>
+<dt><strong><code>LIA_thread_event</code></strong> :&ensp;<code>threading.Event()</code></dt>
+<dd>LIA threading event, never change this!!</dd>
+<dt><strong><code>scope_thread_event</code></strong> :&ensp;<code>threading.Event()</code></dt>
+<dd>Oscilloscope threading event, never change this!!</dd>
+<dt><strong><code>AWG_thread_event</code></strong> :&ensp;<code>threading.Event()</code></dt>
+<dd>AWG threading event, never change this!!</dd>
+<dt><strong><code>tool_select</code></strong> :&ensp;<code><a title="pico_com.ToolSelector" href="#pico_com.ToolSelector">ToolSelector</a></code></dt>
+<dd>Current selected tool, never change this!!</dd>
+</dl>
+<p>&hellip;</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>com</code></strong> :&ensp;<code>str</code></dt>
+<dd>Serial communication port to use for the Pico toolbox</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class PicoCom:
+
+    &#34;&#34;&#34;
+    A class used to communicate with the Pico toolbox. Don&#39;t use the attributes to change stuff use the methods instead!
+
+    ...
+
+    Attributes
+    ----------
+    SA_values : np.ndarray of np.float32
+        ndarray of values from the spectrum analyser
+    scope_values : np.ndarray of np.float32
+        ndarray of values from the oscilloscope
+    communication_speed_hz : int
+        Communication speed in Hz (default 10)
+    serial_com : serial.Serial()
+        Serial communication class, never change this!!
+    SA_thread_event : threading.Event()
+        Spectrum analyser threading event, never change this!!
+    LIA_thread_event : threading.Event()
+        LIA threading event, never change this!!
+    scope_thread_event : threading.Event()
+        Oscilloscope threading event, never change this!!
+    AWG_thread_event : threading.Event()
+        AWG threading event, never change this!!
+    tool_select : ToolSelector
+        Current selected tool, never change this!!
+
+
+    &#34;&#34;&#34;
+    def __init__(self, com: str):
+        &#34;&#34;&#34;
+        ...
+
+        Parameters
+        ----------
+        com : str
+            Serial communication port to use for the Pico toolbox
+        &#34;&#34;&#34;
+        self.serial_com      = serial.Serial(com)
+        self.SA_thread_event = threading.Event()
+        self.LIA_thread_event = threading.Event()
+        self.scope_thread_event = threading.Event()
+        self.tool_select =  ToolSelector.no_tool
+        self.SA_values =    np.empty([0, 0], dtype=np.float32)
+        self.scope_values = np.empty([0, 0], dtype=np.float32)
+        self.communication_speed_hz = 1 #Reading speed in HZ from the pi pico 10hz works for sure
+        self.capture_depth = 1
+        self.speed_test_bytes_per_second = 1
+        self._init_pico_threads()
+        self._usb_speed_test()
+
+    def _init_pico_threads(self):
+        &#34;&#34;&#34; Initialize communication threads&#34;&#34;&#34;
+
+        SA_thread        = threading.Thread(target=self._SA_thread, args=(self.SA_thread_event,))
+        SA_thread.name   = &#34;FFT_thread&#34;
+        SA_thread.daemon = True
+        self.SA_thread_event.clear()
+        SA_thread.start()
+
+        LIA_thread        = threading.Thread(target=self._lia_thread, args=(self.LIA_thread_event,))
+        LIA_thread.name   = &#34;LIA_thread&#34;
+        LIA_thread.daemon = True
+        self.LIA_thread_event.clear()
+        LIA_thread.start()
+
+        scope_thread        = threading.Thread(target=self._scope_thread, args=(self.scope_thread_event,))
+        scope_thread.name   = &#34;scope_thread&#34;
+        scope_thread.daemon = True
+        self.LIA_thread_event.clear()
+        scope_thread.start()
+
+    def _select_command(self, selector):
+        &#34;&#34;&#34;Selects the command from set_tool()
+        &#34;&#34;&#34;
+        if self.tool_select == ToolSelector.no_tool:
+            self._stop_all_threads()
+            self._send_data_to_pico(ToolSelector.no_tool.value)
+            self.tool_select = 0
+        elif self.tool_select == ToolSelector.AWG:
+            self._stop_all_threads()
+            self._send_data_to_pico(ToolSelector.AWG.value)
+            self.tool_select = 0
+        elif self.tool_select == ToolSelector.LIA:
+            self._stop_all_threads()
+            self.LIA_thread_event.set()
+            self.tool_select = 0
+        elif self.tool_select == ToolSelector.SA:
+            self._stop_all_threads()
+            self.communication_speed_hz = 1
+            self.SA_thread_event.set()
+            self.tool_select = 0
+        elif self.tool_select == ToolSelector.scope:
+            self._stop_all_threads()
+            self.communication_speed_hz = 1
+            self.scope_thread_event.set()
+            self.tool_select = 0
+        elif self.tool_select == ToolSelector.AWG_and_scope:
+            self._stop_all_threads()
+            self._send_data_to_pico(ToolSelector.AWG_and_scope.value)
+            self.tool_select = 0
+        elif self.tool_select == ToolSelector.AWG_and_LIA:
+            self._stop_all_threads()
+            print(&#34;AWG_and_LIA&#34;)
+            self.tool_select = 0
+        elif self.tool_select == ToolSelector.AWG_and_SA:
+            self._stop_all_threads()
+            self._send_data_to_pico(ToolSelector.AWG_and_SA.value)
+            self.tool_select = 0
+        elif self.tool_select == ToolSelector.change_settings:
+            self._stop_all_threads()
+            self.tool_select = 0
+        elif self.tool_select == ToolSelector.toolbox_values:
+            self._stop_all_threads()
+            self.tool_select = 0
+        else:
+            pass
+
+    def set_setting(self, setting: SettingsSelector, value: int) -&gt; str:
+        &#34;&#34;&#34;
+        Sets the given value to the given setting on the Pico Toolbox
+        ...
+        Parameters
+        ----------
+        setting : SettingsSelector
+            The setting which needs to be changed
+        value : int
+            The value that the setting will be set to
+        &#34;&#34;&#34;
+        self.set_tool(ToolSelector.change_settings)
+        self._send_data_to_pico(ToolSelector.change_settings.value)
+        self._send_data_to_pico(setting.value)
+        if setting == SettingsSelector.set_adc_sample_rate:
+            value = self._sample_rate_to_clock_devide(value)
+        self._send_data_to_pico((str(value) + &#39;\n&#39; ).encode())
+        time.sleep(0.1)
+        try:
+            return self._get_data_from_pico().decode()
+        except:
+            return self._get_data_from_pico()
+
+
+    def get_setting(self, setting: SettingsSelector) -&gt; str:
+        &#34;&#34;&#34;
+        Sets the given value to the given setting on the Pico Toolbox
+
+        ...
+
+        Parameters
+        ----------
+        setting : SettingsSelector
+            The setting you want to receive
+        &#34;&#34;&#34;
+        self.set_tool(ToolSelector.change_settings)
+        self._send_data_to_pico(ToolSelector.change_settings.value)
+        self._send_data_to_pico(setting.value)
+        time.sleep(0.1)
+        try:
+            if setting == SettingsSelector.get_adc_sample_rate:
+                value = self._get_data_from_pico().decode()
+                value = self._clock_devide_to_sample_rate(value)
+                return value
+            else:
+                return self._get_data_from_pico().decode()
+        except:
+            if setting == SettingsSelector.set_adc_sample_rate:
+                value = str(self._get_data_from_pico())
+                value = self._clock_devide_to_sample_rate(value)
+                return value
+            else:
+                return self._get_data_from_pico()
+
+
+    def set_tool(self, tool: ToolSelector):
+        &#34;&#34;&#34;
+        Sets the given tool on the Pico Toolbox
+
+        ...
+
+        Parameters
+        ----------
+        tool : ToolSelector 
+            The setting which needs to be changed
+        &#34;&#34;&#34;
+        self.tool_select = tool
+        self._select_command(self.tool_select)
+
+    def get_SA_values(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;
+        Returns the latest spectrum analyser values
+
+        ...
+
+        Returns
+        ----------
+        SA_values : np.ndarray of np.float32
+            The latest spectrum analyser values from the Pico toolbox
+        &#34;&#34;&#34;
+        return self.SA_values
+
+    def get_scope_values(self) -&gt; np.ndarray:
+        &#34;&#34;&#34;
+        Returns the latest oscilloscope values
+
+        ...
+
+        Returns
+        ----------
+        scope_values : np.ndarray of np.float32
+            The latest oscilloscope values from the Pico toolbox
+        &#34;&#34;&#34;
+        return self.scope_values
+
+    def _send_data_to_pico(self, data):
+        &#34;Sends data to the pico Toolbox buffer&#34;
+        self.serial_com.write(data)
+
+    def _get_data_from_pico(self):
+        &#34;Reads data buffer from the Pico toolbox&#34;
+        data_str = 0
+        while (self.serial_com.in_waiting &gt; 0):
+            data_str = self.serial_com.read(self.serial_com.in_waiting)
+        return data_str
+
+    def _SA_thread(self, e):
+        &#34;SA thread that gets the SA values from the Pico toolbox and converts data to numpy array&#34;
+        while True:
+            e.wait()
+            self._send_data_to_pico(ToolSelector.SA.value)
+            time.sleep(1/self.communication_speed_hz)
+            raw_data = self._get_data_from_pico()
+            size_of_sa_values = sys.getsizeof(raw_data)
+            seconds = size_of_sa_values /self.speed_test_bytes_per_second
+            if int(1 // seconds) &lt; 45:
+                self.communication_speed_hz = int(1 // seconds)
+            try:
+                if (raw_data != 0):
+                    decoded_data = raw_data.decode()
+                    mapped_data = map(float, decoded_data.rstrip(&#34;\n&#34;).rstrip(&#34;\r&#34;).split(&#34;,&#34;)[:-1])
+                    SA_values_array = np.fromiter(mapped_data, dtype=np.float32)
+                    SA_log_scale = np.log10(np.sqrt(SA_values_array) / self.capture_depth) * 10
+                    self.SA_values = SA_log_scale
+            except:
+                print(&#34;SOrry zal dit fixe&#34;)
+
+
+    def set_capture_depth(self, capture_depth: int):
+        &#34;&#34;&#34;
+        Sets capture depth, important for spectrum analyzer fft plot set this for a better plot
+
+        ...
+
+        Parameters
+        ----------
+        capture_depth : int
+            The capture depth to change after chaning capture depth in settings.
+        &#34;&#34;&#34;
+        self.capture_depth = capture_depth
+    def _lia_thread(self, e):
+        &#34;LIA thread&#34;
+        while True:
+            e.wait()
+            print(&#34;LIA THREAD RUNNING&#34;)
+
+    def _scope_thread(self, e):
+        &#34;Scope thread that gets the scope values from the Pico toolbox and converts data to numpy array&#34;
+        while True:
+            e.wait()
+            self._send_data_to_pico(ToolSelector.scope.value)
+            time.sleep(1/self.communication_speed_hz)
+            raw_data = self._get_data_from_pico()
+            size_of_sa_values = sys.getsizeof(raw_data)
+            seconds = size_of_sa_values /self.speed_test_bytes_per_second
+            if int(1 // seconds) &lt; 25:
+                self.communication_speed_hz = int(1 // seconds)
+            try:
+                if (raw_data != 0):
+                    decoded_data = raw_data.decode()
+                    mapped_data = map(int, decoded_data.rstrip(&#34;  &#34;).rstrip(&#34;\r&#34;).split(&#34;,&#34;)[:-1])
+                    self.scope_values = np.fromiter(mapped_data, dtype=int)
+            except:
+                print(&#34;SOrry zal dit fixe&#34;)
+
+    def _stop_all_threads(self):
+        &#34;pauses all running threads&#34;
+        self.SA_thread_event.clear()
+        self.LIA_thread_event.clear()
+        self.scope_thread_event.clear()
+
+
+
+    def _sample_rate_to_clock_devide(self, sample_rate: int)-&gt; int:
+        &#34;&#34;&#34;
+        Convert sample rate value to clock devide that is used in the Pico]
+
+        Parameters
+        ----------
+        sample_rate : int
+            sample_rate
+
+        Returns
+        ----------
+        clock_devide_value : int
+            Clock devide
+        &#34;&#34;&#34;
+        clock_devide_value = 48000000//int(sample_rate)
+        return clock_devide_value
+
+
+    def _clock_devide_to_sample_rate(self, clock_devide: int)-&gt; int:
+        &#34;&#34;&#34;
+        Convert clock devide to sample rate
+
+        Parameters
+        ----------
+        sample_rate : int
+            sample_rate
+
+        Returns
+        ----------
+        clock_devide_value : int
+            Clock devide
+        &#34;&#34;&#34;
+        sample_rate_value = 48000000//int(clock_devide)
+        return sample_rate_value
+
+    def _usb_speed_test(self):
+        &#34;&#34;&#34;
+        Starts the USB speed test to change the read speed of the communication
+        &#34;&#34;&#34;
+        print(&#34;The speedtest will take about 0.19 seconds be patient&#34;)
+        self.set_tool(ToolSelector.change_settings)
+        self._send_data_to_pico(ToolSelector.change_settings.value)
+        self._send_data_to_pico(SettingsSelector.speed_test.value)
+
+
+        start_time = time.time()
+        speedtest_data = self.serial_com.read(10000)
+        end_time = time.time()
+
+        size_bytes_received = sys.getsizeof(speedtest_data)
+        time_to_receive = end_time - start_time
+        time_formatted = &#34;{:.2f}&#34;.format(time_to_receive)
+        print (f&#34;My program took {time_formatted} seconds to receive {size_bytes_received} bytes&#34;)
+        bytes_per_second = int(size_bytes_received / time_to_receive)
+        print (f&#34; {bytes_per_second} Bytes/s&#34;)
+        self.speed_test_bytes_per_second = bytes_per_second
+        bits_received = size_bytes_received * 8
+        bits_per_second = int(bits_received / time_to_receive)
+        print (f&#34; {bits_per_second} Bits/s&#34;)
+        mBits_received = size_bytes_received / 125000
+        mBits_per_second = mBits_received / time_to_receive
+        mBits_per_second_formatted = &#34;{:.2f}&#34;.format(mBits_per_second)
+        print (f&#34; {mBits_per_second_formatted} mBits/s&#34;)</code></pre>
+</details>
+<h3>Methods</h3>
+<dl>
+<dt id="pico_com.PicoCom.get_SA_values"><code class="name flex">
+<span>def <span class="ident">get_SA_values</span></span>(<span>self) ‑> numpy.ndarray</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the latest spectrum analyser values</p>
+<p>&hellip;</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>SA_values</code></strong> :&ensp;<code>np.ndarray</code> of <code>np.float32</code></dt>
+<dd>The latest spectrum analyser values from the Pico toolbox</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_SA_values(self) -&gt; np.ndarray:
+    &#34;&#34;&#34;
+    Returns the latest spectrum analyser values
+
+    ...
+
+    Returns
+    ----------
+    SA_values : np.ndarray of np.float32
+        The latest spectrum analyser values from the Pico toolbox
+    &#34;&#34;&#34;
+    return self.SA_values</code></pre>
+</details>
+</dd>
+<dt id="pico_com.PicoCom.get_scope_values"><code class="name flex">
+<span>def <span class="ident">get_scope_values</span></span>(<span>self) ‑> numpy.ndarray</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the latest oscilloscope values</p>
+<p>&hellip;</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><strong><code>scope_values</code></strong> :&ensp;<code>np.ndarray</code> of <code>np.float32</code></dt>
+<dd>The latest oscilloscope values from the Pico toolbox</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_scope_values(self) -&gt; np.ndarray:
+    &#34;&#34;&#34;
+    Returns the latest oscilloscope values
+
+    ...
+
+    Returns
+    ----------
+    scope_values : np.ndarray of np.float32
+        The latest oscilloscope values from the Pico toolbox
+    &#34;&#34;&#34;
+    return self.scope_values</code></pre>
+</details>
+</dd>
+<dt id="pico_com.PicoCom.get_setting"><code class="name flex">
+<span>def <span class="ident">get_setting</span></span>(<span>self, setting: <a title="pico_com.SettingsSelector" href="#pico_com.SettingsSelector">SettingsSelector</a>) ‑> str</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Sets the given value to the given setting on the Pico Toolbox</p>
+<p>&hellip;</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>setting</code></strong> :&ensp;<code><a title="pico_com.SettingsSelector" href="#pico_com.SettingsSelector">SettingsSelector</a></code></dt>
+<dd>The setting you want to receive</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_setting(self, setting: SettingsSelector) -&gt; str:
+    &#34;&#34;&#34;
+    Sets the given value to the given setting on the Pico Toolbox
+
+    ...
+
+    Parameters
+    ----------
+    setting : SettingsSelector
+        The setting you want to receive
+    &#34;&#34;&#34;
+    self.set_tool(ToolSelector.change_settings)
+    self._send_data_to_pico(ToolSelector.change_settings.value)
+    self._send_data_to_pico(setting.value)
+    time.sleep(0.1)
+    try:
+        if setting == SettingsSelector.get_adc_sample_rate:
+            value = self._get_data_from_pico().decode()
+            value = self._clock_devide_to_sample_rate(value)
+            return value
+        else:
+            return self._get_data_from_pico().decode()
+    except:
+        if setting == SettingsSelector.set_adc_sample_rate:
+            value = str(self._get_data_from_pico())
+            value = self._clock_devide_to_sample_rate(value)
+            return value
+        else:
+            return self._get_data_from_pico()</code></pre>
+</details>
+</dd>
+<dt id="pico_com.PicoCom.set_capture_depth"><code class="name flex">
+<span>def <span class="ident">set_capture_depth</span></span>(<span>self, capture_depth: int)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Sets capture depth, important for spectrum analyzer fft plot set this for a better plot</p>
+<p>&hellip;</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>capture_depth</code></strong> :&ensp;<code>int</code></dt>
+<dd>The capture depth to change after chaning capture depth in settings.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def set_capture_depth(self, capture_depth: int):
+    &#34;&#34;&#34;
+    Sets capture depth, important for spectrum analyzer fft plot set this for a better plot
+
+    ...
+
+    Parameters
+    ----------
+    capture_depth : int
+        The capture depth to change after chaning capture depth in settings.
+    &#34;&#34;&#34;
+    self.capture_depth = capture_depth</code></pre>
+</details>
+</dd>
+<dt id="pico_com.PicoCom.set_setting"><code class="name flex">
+<span>def <span class="ident">set_setting</span></span>(<span>self, setting: <a title="pico_com.SettingsSelector" href="#pico_com.SettingsSelector">SettingsSelector</a>, value: int) ‑> str</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Sets the given value to the given setting on the Pico Toolbox
+&hellip;
+Parameters</p>
+<hr>
+<dl>
+<dt><strong><code>setting</code></strong> :&ensp;<code><a title="pico_com.SettingsSelector" href="#pico_com.SettingsSelector">SettingsSelector</a></code></dt>
+<dd>The setting which needs to be changed</dd>
+<dt><strong><code>value</code></strong> :&ensp;<code>int</code></dt>
+<dd>The value that the setting will be set to</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def set_setting(self, setting: SettingsSelector, value: int) -&gt; str:
+    &#34;&#34;&#34;
+    Sets the given value to the given setting on the Pico Toolbox
+    ...
+    Parameters
+    ----------
+    setting : SettingsSelector
+        The setting which needs to be changed
+    value : int
+        The value that the setting will be set to
+    &#34;&#34;&#34;
+    self.set_tool(ToolSelector.change_settings)
+    self._send_data_to_pico(ToolSelector.change_settings.value)
+    self._send_data_to_pico(setting.value)
+    if setting == SettingsSelector.set_adc_sample_rate:
+        value = self._sample_rate_to_clock_devide(value)
+    self._send_data_to_pico((str(value) + &#39;\n&#39; ).encode())
+    time.sleep(0.1)
+    try:
+        return self._get_data_from_pico().decode()
+    except:
+        return self._get_data_from_pico()</code></pre>
+</details>
+</dd>
+<dt id="pico_com.PicoCom.set_tool"><code class="name flex">
+<span>def <span class="ident">set_tool</span></span>(<span>self, tool: <a title="pico_com.ToolSelector" href="#pico_com.ToolSelector">ToolSelector</a>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Sets the given tool on the Pico Toolbox</p>
+<p>&hellip;</p>
+<h2 id="parameters">Parameters</h2>
+<dl>
+<dt><strong><code>tool</code></strong> :&ensp;<code><a title="pico_com.ToolSelector" href="#pico_com.ToolSelector">ToolSelector</a> </code></dt>
+<dd>The setting which needs to be changed</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def set_tool(self, tool: ToolSelector):
+    &#34;&#34;&#34;
+    Sets the given tool on the Pico Toolbox
+
+    ...
+
+    Parameters
+    ----------
+    tool : ToolSelector 
+        The setting which needs to be changed
+    &#34;&#34;&#34;
+    self.tool_select = tool
+    self._select_command(self.tool_select)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="pico_com.SettingsSelector"><code class="flex name class">
+<span>class <span class="ident">SettingsSelector</span></span>
+<span>(</span><span>value, names=None, *, module=None, qualname=None, type=None, start=1)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Settings selector enum for selecting the settings</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class SettingsSelector(Enum):
+    &#34;&#34;&#34;
+    Settings selector enum for selecting the settings
+    &#34;&#34;&#34;
+    set_adc_capture_depth   = b&#39;a&#39;
+    set_adc_sample_rate     = b&#39;b&#39;
+    set_adc_amplification   = b&#39;c&#39;
+    set_channel_number      = b&#39;d&#39;
+
+    set_awg_wave_type       = b&#39;e&#39;
+    set_dac_freq            = b&#39;f&#39;
+    set_dac_channel_number  = b&#39;g&#39;
+    set_peak_to_peak        = b&#39;h&#39;
+    set_awg_offset          = b&#39;i&#39;
+
+    set_mSeconds_per_dev    = b&#39;j&#39;
+    set_trigger             = b&#39;k&#39;
+    set_direction           = b&#39;l&#39;
+    set_mVolt_per_DIV       = b&#39;m&#39;
+
+    get_adc_capture_depth   = b&#39;n&#39;
+    get_adc_sample_rate     = b&#39;o&#39;
+    set_awg_duty_cycle      = b&#39;p&#39;
+    set_awg_phase           = b&#39;q&#39;
+    set_awg_enable_a        = b&#39;r&#39;
+    set_awg_enable_b        = b&#39;s&#39;
+    speed_test              = b&#39;t&#39;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>enum.Enum</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="pico_com.SettingsSelector.get_adc_capture_depth"><code class="name">var <span class="ident">get_adc_capture_depth</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="pico_com.SettingsSelector.get_adc_sample_rate"><code class="name">var <span class="ident">get_adc_sample_rate</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="pico_com.SettingsSelector.set_adc_amplification"><code class="name">var <span class="ident">set_adc_amplification</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="pico_com.SettingsSelector.set_adc_capture_depth"><code class="name">var <span class="ident">set_adc_capture_depth</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="pico_com.SettingsSelector.set_adc_sample_rate"><code class="name">var <span class="ident">set_adc_sample_rate</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="pico_com.SettingsSelector.set_awg_duty_cycle"><code class="name">var <span class="ident">set_awg_duty_cycle</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="pico_com.SettingsSelector.set_awg_enable_a"><code class="name">var <span class="ident">set_awg_enable_a</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="pico_com.SettingsSelector.set_awg_enable_b"><code class="name">var <span class="ident">set_awg_enable_b</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="pico_com.SettingsSelector.set_awg_offset"><code class="name">var <span class="ident">set_awg_offset</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="pico_com.SettingsSelector.set_awg_phase"><code class="name">var <span class="ident">set_awg_phase</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="pico_com.SettingsSelector.set_awg_wave_type"><code class="name">var <span class="ident">set_awg_wave_type</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="pico_com.SettingsSelector.set_channel_number"><code class="name">var <span class="ident">set_channel_number</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="pico_com.SettingsSelector.set_dac_channel_number"><code class="name">var <span class="ident">set_dac_channel_number</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="pico_com.SettingsSelector.set_dac_freq"><code class="name">var <span class="ident">set_dac_freq</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="pico_com.SettingsSelector.set_direction"><code class="name">var <span class="ident">set_direction</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="pico_com.SettingsSelector.set_mSeconds_per_dev"><code class="name">var <span class="ident">set_mSeconds_per_dev</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="pico_com.SettingsSelector.set_mVolt_per_DIV"><code class="name">var <span class="ident">set_mVolt_per_DIV</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="pico_com.SettingsSelector.set_peak_to_peak"><code class="name">var <span class="ident">set_peak_to_peak</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="pico_com.SettingsSelector.set_trigger"><code class="name">var <span class="ident">set_trigger</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="pico_com.SettingsSelector.speed_test"><code class="name">var <span class="ident">speed_test</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+<dt id="pico_com.ToolSelector"><code class="flex name class">
+<span>class <span class="ident">ToolSelector</span></span>
+<span>(</span><span>value, names=None, *, module=None, qualname=None, type=None, start=1)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Tool selector enum for selecting the tools</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ToolSelector(Enum):
+    &#34;&#34;&#34;
+    Tool selector enum for selecting the tools
+    &#34;&#34;&#34;
+    AWG = b&#39;1&#39; # Arbitrary waveform generator 
+    LIA = b&#39;2&#39; # Lock-in amplifier
+    SA = b&#39;3&#39;  # Spectrum analyser
+    scope = b&#39;4&#39; # Oscilloscope
+    AWG_and_scope = b&#39;5&#39; # Arbitrary waveform generator and Oscilloscope
+    AWG_and_LIA = b&#39;6&#39; # Arbitrary waveform generator and Lock-in amplifier
+    AWG_and_SA = b&#39;7&#39; # Arbitrary waveform generator and Spectrum analyser
+    change_settings = b&#39;8&#39; # Change toolbox settings
+    toolbox_values = b&#39;9&#39; # Get values from toolbox
+    no_tool = b&#39;0&#39; # Terminate program</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>enum.Enum</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="pico_com.ToolSelector.AWG"><code class="name">var <span class="ident">AWG</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="pico_com.ToolSelector.AWG_and_LIA"><code class="name">var <span class="ident">AWG_and_LIA</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="pico_com.ToolSelector.AWG_and_SA"><code class="name">var <span class="ident">AWG_and_SA</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="pico_com.ToolSelector.AWG_and_scope"><code class="name">var <span class="ident">AWG_and_scope</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="pico_com.ToolSelector.LIA"><code class="name">var <span class="ident">LIA</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="pico_com.ToolSelector.SA"><code class="name">var <span class="ident">SA</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="pico_com.ToolSelector.change_settings"><code class="name">var <span class="ident">change_settings</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="pico_com.ToolSelector.no_tool"><code class="name">var <span class="ident">no_tool</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="pico_com.ToolSelector.scope"><code class="name">var <span class="ident">scope</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="pico_com.ToolSelector.toolbox_values"><code class="name">var <span class="ident">toolbox_values</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="pico_com.PicoCom" href="#pico_com.PicoCom">PicoCom</a></code></h4>
+<ul class="two-column">
+<li><code><a title="pico_com.PicoCom.get_SA_values" href="#pico_com.PicoCom.get_SA_values">get_SA_values</a></code></li>
+<li><code><a title="pico_com.PicoCom.get_scope_values" href="#pico_com.PicoCom.get_scope_values">get_scope_values</a></code></li>
+<li><code><a title="pico_com.PicoCom.get_setting" href="#pico_com.PicoCom.get_setting">get_setting</a></code></li>
+<li><code><a title="pico_com.PicoCom.set_capture_depth" href="#pico_com.PicoCom.set_capture_depth">set_capture_depth</a></code></li>
+<li><code><a title="pico_com.PicoCom.set_setting" href="#pico_com.PicoCom.set_setting">set_setting</a></code></li>
+<li><code><a title="pico_com.PicoCom.set_tool" href="#pico_com.PicoCom.set_tool">set_tool</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="pico_com.SettingsSelector" href="#pico_com.SettingsSelector">SettingsSelector</a></code></h4>
+<ul class="">
+<li><code><a title="pico_com.SettingsSelector.get_adc_capture_depth" href="#pico_com.SettingsSelector.get_adc_capture_depth">get_adc_capture_depth</a></code></li>
+<li><code><a title="pico_com.SettingsSelector.get_adc_sample_rate" href="#pico_com.SettingsSelector.get_adc_sample_rate">get_adc_sample_rate</a></code></li>
+<li><code><a title="pico_com.SettingsSelector.set_adc_amplification" href="#pico_com.SettingsSelector.set_adc_amplification">set_adc_amplification</a></code></li>
+<li><code><a title="pico_com.SettingsSelector.set_adc_capture_depth" href="#pico_com.SettingsSelector.set_adc_capture_depth">set_adc_capture_depth</a></code></li>
+<li><code><a title="pico_com.SettingsSelector.set_adc_sample_rate" href="#pico_com.SettingsSelector.set_adc_sample_rate">set_adc_sample_rate</a></code></li>
+<li><code><a title="pico_com.SettingsSelector.set_awg_duty_cycle" href="#pico_com.SettingsSelector.set_awg_duty_cycle">set_awg_duty_cycle</a></code></li>
+<li><code><a title="pico_com.SettingsSelector.set_awg_enable_a" href="#pico_com.SettingsSelector.set_awg_enable_a">set_awg_enable_a</a></code></li>
+<li><code><a title="pico_com.SettingsSelector.set_awg_enable_b" href="#pico_com.SettingsSelector.set_awg_enable_b">set_awg_enable_b</a></code></li>
+<li><code><a title="pico_com.SettingsSelector.set_awg_offset" href="#pico_com.SettingsSelector.set_awg_offset">set_awg_offset</a></code></li>
+<li><code><a title="pico_com.SettingsSelector.set_awg_phase" href="#pico_com.SettingsSelector.set_awg_phase">set_awg_phase</a></code></li>
+<li><code><a title="pico_com.SettingsSelector.set_awg_wave_type" href="#pico_com.SettingsSelector.set_awg_wave_type">set_awg_wave_type</a></code></li>
+<li><code><a title="pico_com.SettingsSelector.set_channel_number" href="#pico_com.SettingsSelector.set_channel_number">set_channel_number</a></code></li>
+<li><code><a title="pico_com.SettingsSelector.set_dac_channel_number" href="#pico_com.SettingsSelector.set_dac_channel_number">set_dac_channel_number</a></code></li>
+<li><code><a title="pico_com.SettingsSelector.set_dac_freq" href="#pico_com.SettingsSelector.set_dac_freq">set_dac_freq</a></code></li>
+<li><code><a title="pico_com.SettingsSelector.set_direction" href="#pico_com.SettingsSelector.set_direction">set_direction</a></code></li>
+<li><code><a title="pico_com.SettingsSelector.set_mSeconds_per_dev" href="#pico_com.SettingsSelector.set_mSeconds_per_dev">set_mSeconds_per_dev</a></code></li>
+<li><code><a title="pico_com.SettingsSelector.set_mVolt_per_DIV" href="#pico_com.SettingsSelector.set_mVolt_per_DIV">set_mVolt_per_DIV</a></code></li>
+<li><code><a title="pico_com.SettingsSelector.set_peak_to_peak" href="#pico_com.SettingsSelector.set_peak_to_peak">set_peak_to_peak</a></code></li>
+<li><code><a title="pico_com.SettingsSelector.set_trigger" href="#pico_com.SettingsSelector.set_trigger">set_trigger</a></code></li>
+<li><code><a title="pico_com.SettingsSelector.speed_test" href="#pico_com.SettingsSelector.speed_test">speed_test</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="pico_com.ToolSelector" href="#pico_com.ToolSelector">ToolSelector</a></code></h4>
+<ul class="two-column">
+<li><code><a title="pico_com.ToolSelector.AWG" href="#pico_com.ToolSelector.AWG">AWG</a></code></li>
+<li><code><a title="pico_com.ToolSelector.AWG_and_LIA" href="#pico_com.ToolSelector.AWG_and_LIA">AWG_and_LIA</a></code></li>
+<li><code><a title="pico_com.ToolSelector.AWG_and_SA" href="#pico_com.ToolSelector.AWG_and_SA">AWG_and_SA</a></code></li>
+<li><code><a title="pico_com.ToolSelector.AWG_and_scope" href="#pico_com.ToolSelector.AWG_and_scope">AWG_and_scope</a></code></li>
+<li><code><a title="pico_com.ToolSelector.LIA" href="#pico_com.ToolSelector.LIA">LIA</a></code></li>
+<li><code><a title="pico_com.ToolSelector.SA" href="#pico_com.ToolSelector.SA">SA</a></code></li>
+<li><code><a title="pico_com.ToolSelector.change_settings" href="#pico_com.ToolSelector.change_settings">change_settings</a></code></li>
+<li><code><a title="pico_com.ToolSelector.no_tool" href="#pico_com.ToolSelector.no_tool">no_tool</a></code></li>
+<li><code><a title="pico_com.ToolSelector.scope" href="#pico_com.ToolSelector.scope">scope</a></code></li>
+<li><code><a title="pico_com.ToolSelector.toolbox_values" href="#pico_com.ToolSelector.toolbox_values">toolbox_values</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>

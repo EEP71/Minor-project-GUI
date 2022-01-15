@@ -3,6 +3,7 @@ import time
 import threading
 from enum import Enum
 import numpy as np
+import sys
 
 class ToolSelector(Enum):
     """
@@ -23,25 +24,29 @@ class SettingsSelector(Enum):
     """
     Settings selector enum for selecting the settings
     """
-    set_adc_capture_depth = b'a'
-    set_adc_sample_rate = b'b'
-    set_adc_amplification = b'c'
-    set_channel_number = b'd'
+    set_adc_capture_depth   = b'a'
+    set_adc_sample_rate     = b'b'
+    set_adc_amplification   = b'c'
+    set_channel_number      = b'd'
 
-    set_awg_wave_type = b'e'
-    set_dac_freq = b'f'
-    set_dac_channel_number = b'g'
-    set_peak_to_peak = b'h'
-    set_awg_offset = b'i'
+    set_awg_wave_type       = b'e'
+    set_dac_freq            = b'f'
+    set_dac_channel_number  = b'g'
+    set_peak_to_peak        = b'h'
+    set_awg_offset          = b'i'
 
-    set_mSeconds_per_dev   = b'j'
-    set_trigger            = b'k'
-    set_direction          = b'l'
-    set_mVolt_per_DIV      = b'm'
+    set_mSeconds_per_dev    = b'j'
+    set_trigger             = b'k'
+    set_direction           = b'l'
+    set_mVolt_per_DIV       = b'm'
 
-    get_adc_capture_depth = b'n'
-    get_adc_sample_rate =   b'o'
-
+    get_adc_capture_depth   = b'n'
+    get_adc_sample_rate     = b'o'
+    set_awg_duty_cycle      = b'p'
+    set_awg_phase           = b'q'
+    set_awg_enable_a        = b'r'
+    set_awg_enable_b        = b's'
+    speed_test              = b't'
 
 class PicoCom:
 
@@ -86,13 +91,14 @@ class PicoCom:
         self.SA_thread_event = threading.Event()
         self.LIA_thread_event = threading.Event()
         self.scope_thread_event = threading.Event()
-        self.AWG_thread_event = threading.Event()
         self.tool_select =  ToolSelector.no_tool
         self.SA_values =    np.empty([0, 0], dtype=np.float32)
         self.scope_values = np.empty([0, 0], dtype=np.float32)
-        self.communication_speed_hz = 10 #Reading speed in HZ from the pi pico 10hz works for sure
+        self.communication_speed_hz = 1 #Reading speed in HZ from the pi pico 10hz works for sure
         self.capture_depth = 1
+        self.speed_test_bytes_per_second = 1
         self._init_pico_threads()
+        self._usb_speed_test()
 
     def _init_pico_threads(self):
         """ Initialize communication threads"""
@@ -115,30 +121,16 @@ class PicoCom:
         self.LIA_thread_event.clear()
         scope_thread.start()
 
-        AWG_thread        = threading.Thread(target=self._AWG_thread, args=(self.AWG_thread_event,))
-        AWG_thread.name   = "AWG_thread"
-        AWG_thread.daemon = True
-        self.AWG_thread_event.clear()
-        AWG_thread.start()
-
     def _select_command(self, selector):
         """Selects the command from set_tool()
-        1: Arbitrary waveform generator
-        2: Lock-in amplifier
-        3: Spectrum analyser
-        4: Oscilloscope
-        5: Arbitrary waveform generator and Oscilloscope
-        6: Arbitrary waveform generator and Lock-in amplifier
-        7: Arbitrary waveform generator and Spectrum analyser
-        8: Change toolbox settings
-        9: Get values from toolbox
         """
         if self.tool_select == ToolSelector.no_tool:
             self._stop_all_threads()
+            self._send_data_to_pico(ToolSelector.no_tool.value)
             self.tool_select = 0
         elif self.tool_select == ToolSelector.AWG:
             self._stop_all_threads()
-            self.AWG_thread_event.set()
+            self._send_data_to_pico(ToolSelector.AWG.value)
             self.tool_select = 0
         elif self.tool_select == ToolSelector.LIA:
             self._stop_all_threads()
@@ -146,15 +138,17 @@ class PicoCom:
             self.tool_select = 0
         elif self.tool_select == ToolSelector.SA:
             self._stop_all_threads()
+            self.communication_speed_hz = 1
             self.SA_thread_event.set()
             self.tool_select = 0
         elif self.tool_select == ToolSelector.scope:
             self._stop_all_threads()
+            self.communication_speed_hz = 1
             self.scope_thread_event.set()
             self.tool_select = 0
         elif self.tool_select == ToolSelector.AWG_and_scope:
             self._stop_all_threads()
-            print("AWG_and_scope")
+            self._send_data_to_pico(ToolSelector.AWG_and_scope.value)
             self.tool_select = 0
         elif self.tool_select == ToolSelector.AWG_and_LIA:
             self._stop_all_threads()
@@ -162,7 +156,7 @@ class PicoCom:
             self.tool_select = 0
         elif self.tool_select == ToolSelector.AWG_and_SA:
             self._stop_all_threads()
-            print("AWG_and_SA")
+            self._send_data_to_pico(ToolSelector.AWG_and_SA.value)
             self.tool_select = 0
         elif self.tool_select == ToolSelector.change_settings:
             self._stop_all_threads()
@@ -236,7 +230,7 @@ class PicoCom:
 
         Parameters
         ----------
-        tool : ToolSelector  
+        tool : ToolSelector 
             The setting which needs to be changed
         """
         self.tool_select = tool
@@ -286,12 +280,17 @@ class PicoCom:
             self._send_data_to_pico(ToolSelector.SA.value)
             time.sleep(1/self.communication_speed_hz)
             raw_data = self._get_data_from_pico()
+            size_of_sa_values = sys.getsizeof(raw_data)
+            seconds = size_of_sa_values /self.speed_test_bytes_per_second
+            if int(1 // seconds) < 45:
+                self.communication_speed_hz = int(1 // seconds)
             try:
                 if (raw_data != 0):
                     decoded_data = raw_data.decode()
                     mapped_data = map(float, decoded_data.rstrip("\n").rstrip("\r").split(",")[:-1])
                     SA_values_array = np.fromiter(mapped_data, dtype=np.float32)
-                    self.SA_values = np.log10(np.sqrt(SA_values_array) / self.capture_depth) * 10
+                    SA_log_scale = np.log10(np.sqrt(SA_values_array) / self.capture_depth) * 10
+                    self.SA_values = SA_log_scale
             except:
                 print("SOrry zal dit fixe")
 
@@ -304,7 +303,7 @@ class PicoCom:
 
         Parameters
         ----------
-        capture_depth : int  
+        capture_depth : int
             The capture depth to change after chaning capture depth in settings.
         """
         self.capture_depth = capture_depth
@@ -318,49 +317,89 @@ class PicoCom:
         "Scope thread that gets the scope values from the Pico toolbox and converts data to numpy array"
         while True:
             e.wait()
-            self._send_data_to_pico(ToolSelector.SA.value)
+            self._send_data_to_pico(ToolSelector.scope.value)
             time.sleep(1/self.communication_speed_hz)
             raw_data = self._get_data_from_pico()
+            size_of_sa_values = sys.getsizeof(raw_data)
+            seconds = size_of_sa_values /self.speed_test_bytes_per_second
+            if int(1 // seconds) < 25:
+                self.communication_speed_hz = int(1 // seconds)
             try:
                 if (raw_data != 0):
                     decoded_data = raw_data.decode()
-                    mapped_data = map(float, decoded_data.rstrip("  ").rstrip("\r").split(",")[:-1])
-                    self.scope_values = np.fromiter(mapped_data, dtype=np.float32)
+                    mapped_data = map(int, decoded_data.rstrip("  ").rstrip("\r").split(",")[:-1])
+                    self.scope_values = np.fromiter(mapped_data, dtype=int)
             except:
                 print("SOrry zal dit fixe")
-
-    def _AWG_thread(self, e):
-        "AWG thread"
-        while True:
-            e.wait()
-            print("_AWG_thread  RUNNING")
 
     def _stop_all_threads(self):
         "pauses all running threads"
         self.SA_thread_event.clear()
         self.LIA_thread_event.clear()
         self.scope_thread_event.clear()
-        self.AWG_thread_event.clear()
-        # self.serial_com.cancel_read()
-        # self.serial_com.cancel_write()
-        # # self.serial_com.reset_input_buffer()
-        # # self.serial_com.reset_output_buffer()
-        # # self.serial_com.flush()
-        # # self.serial_com.flushInput()
-        # # self.serial_com.flushOutput()
 
-    def _select_settings(self, setting_selector):
+
+
+    def _sample_rate_to_clock_devide(self, sample_rate: int)-> int:
         """
-        TODO
+        Convert sample rate value to clock devide that is used in the Pico]
+
+        Parameters
+        ----------
+        sample_rate : int
+            sample_rate
+
+        Returns
+        ----------
+        clock_devide_value : int
+            Clock devide
         """
-        pass
-
-
-    def _sample_rate_to_clock_devide(self, sample_rate):
         clock_devide_value = 48000000//int(sample_rate)
         return clock_devide_value
 
 
-    def _clock_devide_to_sample_rate(self, clock_devide):
+    def _clock_devide_to_sample_rate(self, clock_devide: int)-> int:
+        """
+        Convert clock devide to sample rate
+
+        Parameters
+        ----------
+        sample_rate : int
+            sample_rate
+
+        Returns
+        ----------
+        clock_devide_value : int
+            Clock devide
+        """
         sample_rate_value = 48000000//int(clock_devide)
         return sample_rate_value
+
+    def _usb_speed_test(self):
+        """
+        Starts the USB speed test to change the read speed of the communication
+        """
+        print("The speedtest will take about 0.19 seconds be patient")
+        self.set_tool(ToolSelector.change_settings)
+        self._send_data_to_pico(ToolSelector.change_settings.value)
+        self._send_data_to_pico(SettingsSelector.speed_test.value)
+
+
+        start_time = time.time()
+        speedtest_data = self.serial_com.read(10000)
+        end_time = time.time()
+
+        size_bytes_received = sys.getsizeof(speedtest_data)
+        time_to_receive = end_time - start_time
+        time_formatted = "{:.2f}".format(time_to_receive)
+        print (f"My program took {time_formatted} seconds to receive {size_bytes_received} bytes")
+        bytes_per_second = int(size_bytes_received / time_to_receive)
+        print (f" {bytes_per_second} Bytes/s")
+        self.speed_test_bytes_per_second = bytes_per_second
+        bits_received = size_bytes_received * 8
+        bits_per_second = int(bits_received / time_to_receive)
+        print (f" {bits_per_second} Bits/s")
+        mBits_received = size_bytes_received / 125000
+        mBits_per_second = mBits_received / time_to_receive
+        mBits_per_second_formatted = "{:.2f}".format(mBits_per_second)
+        print (f" {mBits_per_second_formatted} mBits/s")

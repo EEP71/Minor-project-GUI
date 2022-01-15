@@ -1,3 +1,4 @@
+from cProfile import label
 import tkinter as tk
 from tkinter import Image, StringVar, ttk, font as tkfont
 from tkinter.constants import *
@@ -173,7 +174,6 @@ class MainPage(tk.Frame):
                     ax_sa.set_xlim(0, sa_sample_rate/2+1)
                     line_sa.set_data(x, pico.get_SA_values())
                     highest_amp = np.argmax(pico.get_SA_values())
-                    label.set_text(f"HIGHEST FREQ: {x[highest_amp]}\nHZ/STEP: {sa_sample_rate/sa_capture_depth}")
 
                 else:
                     line_sa.set_data(0, 0)
@@ -191,12 +191,15 @@ class MainPage(tk.Frame):
         plt.ylabel('dB')
         plt.title('Spectrum analyser')
         plt.autoscale(enable=True, axis='x')
+        self.legend = plt.legend(loc='lower left')
         self.ani_sa =  matplotlib.animation.FuncAnimation(fig_sa, animate_spectrum_analyser, init_func=init_line_sa, interval=25, blit=False)
     ##### END SA #####
 
         fig_osc = plt.figure()
         ax_osc = fig_osc.add_subplot(1, 1, 1)
         line_osc = plt.plot([],[], color = yellow)[0]
+        self.sd_label = plt.plot([],[], ' ', label="1 ms/div")
+        self.vd_label = plt.plot([],[], ' ', label="1 mV/div")
         ax_osc.set_facecolor(black)
 
         def init_line_osc():
@@ -224,17 +227,11 @@ class MainPage(tk.Frame):
             lw = 0.5,
             color = grey)
 
-        # plot axes lines
-        # ax_osc.hlines(y = 0,
-        #             xmin = 0,
-        #             xmax = stop,
-        #             lw = 2,
-        #             colors = grey)
-        # ax_osc.vlines(x = time[int(span * i + (1 + span * displayed_period) / 2)],
-        #             ymin = 1.1 * signal.min(),
-        #             ymax = 1.1 * signal.max(),
-        #             lw = 2,
-        #             colors = grey)
+        # legend
+        self.legend = ax_osc.legend(loc='lower left', shadow=True, fontsize='x-large')
+
+        for t in self.legend.get_texts():
+            t.set_ha('right')
 
         global canvas_osc
         canvas_osc = FigureCanvasTkAgg(fig_osc, master=root)
@@ -243,7 +240,10 @@ class MainPage(tk.Frame):
         plt.xlabel('mS')
         plt.ylabel('mV')
         plt.title('Oscilloscope')
-        self.ani_scope =  matplotlib.animation.FuncAnimation(fig_osc, animate_oscilloscope, init_func=init_line_osc, interval=25, blit=False)
+        plt.subplots_adjust(top = 1, bottom = 0, right = 1, left = 0, 
+            hspace = 0, wspace = 0)
+        plt.margins(0,0)
+        self.ani_osc =  matplotlib.animation.FuncAnimation(fig_osc, animate_oscilloscope, init_func=init_line_osc, interval=25, blit=False)
     #### END OSC ####
 
 # ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- #
@@ -405,12 +405,14 @@ class MainPage(tk.Frame):
         self.sd_text_osc.configure(foreground="#F2F4D1")
 
         self.sd_osc = tk.Entry(self, width=30, validate="key", validatecommand=(validation, '%S'))
+        self.sd_osc.insert(0, "1")
 
         self.vd_text_osc = tk.Label(self, text = "Millivolt per division", font = controller.paragraph_font)
         self.vd_text_osc.configure(background="#5E6073")
         self.vd_text_osc.configure(foreground="#F2F4D1")
 
         self.vd_osc = tk.Entry(self, width=30, validate="key", validatecommand=(validation, '%S'))
+        self.vd_osc.insert(0, "1")
 
 # ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- #
 # SA
@@ -621,9 +623,13 @@ class MainPage(tk.Frame):
             try:
                 trigger = int(np.interp(float(self.trigger.get()), osc_trigger_real, osc_trigger_real))
                 direction = float(1 if self.direction.get() == "Up" else 0)
-                sd_osc = int(self.sd_osc.get())
-                vd_osc = int(self.vd_osc.get())
-                plt.axis([0, 120, 0, 4096])
+                sd_osc = float(self.sd_osc.get())
+                vd_osc = float(self.vd_osc.get())
+                self.legend.get_texts()[0].set_text(str(sd_osc) + " ms/div")
+                self.legend.get_texts()[1].set_text(str(vd_osc) + " mV/div")
+                x_max = (sd_osc * 500000 / 10000) * 6
+                y_max = (4096 / 3300 * 6 * vd_osc) - 1
+                plt.axis([0, x_max, 0, y_max])
 
                 amp = self.amp.get()
                 ["100x", "10x", "1x", "0.1x"]

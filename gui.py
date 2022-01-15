@@ -163,7 +163,6 @@ class MainPage(tk.Frame):
             return (line_sa,)
 
     ##### SA #####
-        label = ax_sa.text(0, 0, "HIGHEST FREQ:", ha='left', va='top', fontsize=20, color="Red")
         def animate_spectrum_analyser(i):
             global x
             global pico
@@ -199,7 +198,7 @@ class MainPage(tk.Frame):
         ax_osc = fig_osc.add_subplot(1, 1, 1)
         line_osc = plt.plot([],[], color = yellow)[0]
         self.sd_label = plt.plot([],[], ' ', label="1 ms/div")
-        self.vd_label = plt.plot([],[], ' ', label="1 mV/div")
+        self.vd_label = plt.plot([],[], ' ', label="500 mV/div")
         ax_osc.set_facecolor(black)
 
         def init_line_osc():
@@ -235,8 +234,7 @@ class MainPage(tk.Frame):
 
         global canvas_osc
         canvas_osc = FigureCanvasTkAgg(fig_osc, master=root)
-        plt.xlim(0, 500)
-        plt.ylim(0, 4096)
+        plt.axis([0, 300, 0, 3722])
         plt.xlabel('mS')
         plt.ylabel('mV')
         plt.title('Oscilloscope')
@@ -412,7 +410,7 @@ class MainPage(tk.Frame):
         self.vd_text_osc.configure(foreground="#F2F4D1")
 
         self.vd_osc = tk.Entry(self, width=30, validate="key", validatecommand=(validation, '%S'))
-        self.vd_osc.insert(0, "1")
+        self.vd_osc.insert(0, "500")
 
 # ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- #
 # SA
@@ -629,6 +627,7 @@ class MainPage(tk.Frame):
                 self.legend.get_texts()[1].set_text(str(vd_osc) + " mV/div")
                 x_max = (sd_osc * 500000 / 10000) * 6
                 y_max = (4096 / 3300 * 6 * vd_osc) - 1
+                print(x_max, y_max)
                 plt.axis([0, x_max, 0, y_max])
 
                 amp = self.amp.get()

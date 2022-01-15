@@ -123,15 +123,6 @@ class PicoCom:
 
     def _select_command(self, selector):
         """Selects the command from set_tool()
-        1: Arbitrary waveform generator
-        2: Lock-in amplifier
-        3: Spectrum analyser
-        4: Oscilloscope
-        5: Arbitrary waveform generator and Oscilloscope
-        6: Arbitrary waveform generator and Lock-in amplifier
-        7: Arbitrary waveform generator and Spectrum analyser
-        8: Change toolbox settings
-        9: Get values from toolbox
         """
         if self.tool_select == ToolSelector.no_tool:
             self._stop_all_threads()
@@ -312,7 +303,7 @@ class PicoCom:
 
         Parameters
         ----------
-        capture_depth : int  
+        capture_depth : int
             The capture depth to change after chaning capture depth in settings.
         """
         self.capture_depth = capture_depth
@@ -346,31 +337,48 @@ class PicoCom:
         self.SA_thread_event.clear()
         self.LIA_thread_event.clear()
         self.scope_thread_event.clear()
-        # self.serial_com.cancel_read()
-        # self.serial_com.cancel_write()
-        # # self.serial_com.reset_input_buffer()
-        # # self.serial_com.reset_output_buffer()
-        # # self.serial_com.flush()
-        # # self.serial_com.flushInput()
-        # # self.serial_com.flushOutput()
 
-    def _select_settings(self, setting_selector):
+
+
+    def _sample_rate_to_clock_devide(self, sample_rate: int)-> int:
         """
-        TODO
+        Convert sample rate value to clock devide that is used in the Pico]
+
+        Parameters
+        ----------
+        sample_rate : int
+            sample_rate
+
+        Returns
+        ----------
+        clock_devide_value : int
+            Clock devide
         """
-        pass
-
-
-    def _sample_rate_to_clock_devide(self, sample_rate):
         clock_devide_value = 48000000//int(sample_rate)
         return clock_devide_value
 
 
-    def _clock_devide_to_sample_rate(self, clock_devide):
+    def _clock_devide_to_sample_rate(self, clock_devide: int)-> int:
+        """
+        Convert clock devide to sample rate
+
+        Parameters
+        ----------
+        sample_rate : int
+            sample_rate
+
+        Returns
+        ----------
+        clock_devide_value : int
+            Clock devide
+        """
         sample_rate_value = 48000000//int(clock_devide)
         return sample_rate_value
 
     def _usb_speed_test(self):
+        """
+        Starts the USB speed test to change the read speed of the communication
+        """
         print("The speedtest will take about 0.19 seconds be patient")
         self.set_tool(ToolSelector.change_settings)
         self._send_data_to_pico(ToolSelector.change_settings.value)

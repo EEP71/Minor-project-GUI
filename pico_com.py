@@ -386,10 +386,10 @@ class PicoCom:
 
 
         start_time = time.time()
-        speedtest_data = self.serial_com.read(10000)
+        self.speedtest_data = self.serial_com.read(10000)
         end_time = time.time()
 
-        size_bytes_received = sys.getsizeof(speedtest_data)
+        size_bytes_received = sys.getsizeof(self.speedtest_data)
         time_to_receive = end_time - start_time
         time_formatted = "{:.2f}".format(time_to_receive)
         print (f"My program took {time_formatted} seconds to receive {size_bytes_received} bytes")

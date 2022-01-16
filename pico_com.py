@@ -152,7 +152,6 @@ class PicoCom:
             self.tool_select = 0
         elif self.tool_select == ToolSelector.AWG_and_LIA:
             self._stop_all_threads()
-            print("AWG_and_LIA")
             self.tool_select = 0
         elif self.tool_select == ToolSelector.AWG_and_SA:
             self._stop_all_threads()
@@ -292,7 +291,7 @@ class PicoCom:
                     SA_log_scale = np.log10(np.sqrt(SA_values_array) / self.capture_depth) * 10
                     self.SA_values = SA_log_scale
             except:
-                print("SOrry zal dit fixe")
+                print("Corrupted Data")
 
 
     def set_capture_depth(self, capture_depth: int):
@@ -311,7 +310,7 @@ class PicoCom:
         "LIA thread"
         while True:
             e.wait()
-            print("LIA THREAD RUNNING")
+            #Lia stuff
 
     def _scope_thread(self, e):
         "Scope thread that gets the scope values from the Pico toolbox and converts data to numpy array"
@@ -330,7 +329,7 @@ class PicoCom:
                     mapped_data = map(int, decoded_data.rstrip("  ").rstrip("\r").split(",")[:-1])
                     self.scope_values = np.fromiter(mapped_data, dtype=int)
             except:
-                print("SOrry zal dit fixe")
+                print("Corrupted Data")
 
     def _stop_all_threads(self):
         "pauses all running threads"

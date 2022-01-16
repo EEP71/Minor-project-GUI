@@ -212,7 +212,6 @@ class MainPage(tk.Frame):
             if pico is not None:
                 x = range(0, sa_capture_depth // 2,1)
                 if (len(pico.get_scope_values()) == len(x)) and pico is not None:
-                    # print(pico.get_scope_values())
                     line_osc.set_data(x, pico.get_scope_values())
                 else:
                     line_osc.set_data(0, 0)
@@ -527,7 +526,7 @@ class MainPage(tk.Frame):
             else:
                 channel_enable_a = False
                 self.chan_enable_left.config(background="#B2D3BE", text="Enable A")
-                print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_enable_a, 0)}")
+                pico.set_setting(SettingsSelector.set_awg_enable_a, 0)
                 return
         else:
             global channel_enable_b
@@ -537,7 +536,7 @@ class MainPage(tk.Frame):
             else:
                 channel_enable_b = False
                 self.chan_enable_right.config(background="#B2D3BE", text="Enable B")
-                print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_enable_b, 0)}")
+                pico.set_setting(SettingsSelector.set_awg_enable_b, 0)
                 return
 
         if tool_one == "awg":
@@ -569,16 +568,14 @@ class MainPage(tk.Frame):
             try:
                 capture_depth_value = int(np.ceil(np.interp(float(self.capture_depth.get()), sa_capture_depth_real, sa_capture_depth_real) / 2.) * 2)
                 sample_rate = int(np.interp(float(self.sample_rate.get()), sa_sample_rate_real, sa_sample_rate_real))
-                print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_adc_sample_rate, sample_rate)}")
-                print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_adc_capture_depth, capture_depth_value)}")
+                pico.set_setting(SettingsSelector.set_adc_sample_rate, sample_rate)
+                pico.set_setting(SettingsSelector.set_adc_capture_depth, capture_depth_value)
                 sa_sample_rate = int(pico.get_setting(SettingsSelector.get_adc_sample_rate))
                 sa_capture_depth = int(pico.get_setting(SettingsSelector.get_adc_capture_depth))
-                print(f"MESSAGE FROM PICO: Get adc caputre depth = {sa_capture_depth}")
-                print(f"MESSAGE FROM PICO: Get adc sample rate {sa_sample_rate}")
                 pico.set_capture_depth(sa_capture_depth)
                 pico.set_tool(ToolSelector.SA)
             except:
-                print("VALUE IS NOT A FUCKING INT THIS TRY EXPECT SUCKS BTW CHANGE iT TO CHECK IF VALUES ARE INT NOT CHARACTERS")
+                print("Value is not an INT, this try except is still terrible")
         elif tool == "awg":
             try:
                 wave_type = self.slected_wave_left.get() if awg_side == "a" else self.selected_wave_right.get()
@@ -602,21 +599,21 @@ class MainPage(tk.Frame):
                 channel = int(0 if awg_side == "a" else 1)
                 if channel == 0:
                     enable_a = 1
-                    print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_enable_a, enable_a)}")
+                    pico.set_setting(SettingsSelector.set_awg_enable_a, enable_a)
                 else:
                     enable_b = 1
-                    print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_enable_b, enable_b)}")
-                print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_wave_type, wave_type)}")
-                print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_duty_cycle, duty_cycle)}")
-                print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_dac_freq, freq)}")
-                print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_peak_to_peak, ptp)}")
-                print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_offset, offset)}")
-                print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_awg_phase, phase)}")
-                print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_channel_number, channel)}")
+                    pico.set_setting(SettingsSelector.set_awg_enable_b, enable_b)
+                pico.set_setting(SettingsSelector.set_awg_wave_type, wave_type)
+                pico.set_setting(SettingsSelector.set_awg_duty_cycle, duty_cycle)
+                pico.set_setting(SettingsSelector.set_dac_freq, freq)
+                pico.set_setting(SettingsSelector.set_peak_to_peak, ptp)
+                pico.set_setting(SettingsSelector.set_awg_offset, offset)
+                pico.set_setting(SettingsSelector.set_awg_phase, phase)
+                pico.set_setting(SettingsSelector.set_channel_number, channel)
 
                 pico.set_tool(ToolSelector.AWG)
             except:
-                print("VALUE IS NOT A FUCKING INT THIS TRY EXPECT SUCKS BTW CHANGE iT TO CHECK IF VALUES ARE INT NOT CHARACTERS")
+                print("Value is not an INT, this try except is still terrible")
         elif tool == "osc":
             try:
                 trigger = int(np.interp(float(self.trigger.get()), osc_trigger_real, osc_trigger_real))
@@ -627,7 +624,6 @@ class MainPage(tk.Frame):
                 self.legend.get_texts()[1].set_text(str(vd_osc) + " mV/div")
                 x_max = (sd_osc * 500000 / 10000) * 6
                 y_max = (4096 / 3300 * 6 * vd_osc) - 1
-                print(x_max, y_max)
                 plt.axis([0, x_max, 0, y_max])
 
                 amp = self.amp.get()
@@ -642,12 +638,12 @@ class MainPage(tk.Frame):
                     amp = 0
                 else:
                     amp = -1
-                print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_adc_amplification, amp)}")
-                print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_direction, direction)}")
-                print(f"MESSAGE FROM PICO: {pico.set_setting(SettingsSelector.set_trigger, trigger)}")
+                pico.set_setting(SettingsSelector.set_adc_amplification, amp)
+                pico.set_setting(SettingsSelector.set_direction, direction)
+                pico.set_setting(SettingsSelector.set_trigger, trigger)
                 pico.set_tool(ToolSelector.scope)
             except:
-                print("VALUE IS NOT A FUCKING INT THIS TRY EXPECT SUCKS BTW CHANGE iT TO CHECK IF VALUES ARE INT NOT CHARACTERS")
+                print("Value is not an INT, this try except is still terrible")
         else:
             pico.set_tool(ToolSelector.no_tool)
 

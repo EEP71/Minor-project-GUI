@@ -379,7 +379,7 @@ class PicoCom:
         """
         Starts the USB speed test to change the read speed of the communication
         """
-        print("The speedtest will take about 0.19 seconds be patient")
+        # print("The speedtest will take about 0.19 seconds be patient")
         self.set_tool(ToolSelector.change_settings)
         self._send_data_to_pico(ToolSelector.change_settings.value)
         self._send_data_to_pico(SettingsSelector.speed_test.value)
@@ -392,14 +392,14 @@ class PicoCom:
         size_bytes_received = sys.getsizeof(self.speedtest_data)
         time_to_receive = end_time - start_time
         time_formatted = "{:.2f}".format(time_to_receive)
-        print (f"My program took {time_formatted} seconds to receive {size_bytes_received} bytes")
+        # print (f"My program took {time_formatted} seconds to receive {size_bytes_received} bytes")
         bytes_per_second = int(size_bytes_received / time_to_receive)
-        print (f" {bytes_per_second} Bytes/s")
+        # print (f" {bytes_per_second} Bytes/s")
         self.speed_test_bytes_per_second = bytes_per_second
         bits_received = size_bytes_received * 8
         bits_per_second = int(bits_received / time_to_receive)
-        print (f" {bits_per_second} Bits/s")
+        # print (f" {bits_per_second} Bits/s")
         mBits_received = size_bytes_received / 125000
         mBits_per_second = mBits_received / time_to_receive
         mBits_per_second_formatted = "{:.2f}".format(mBits_per_second)
-        print (f" {mBits_per_second_formatted} mBits/s")
+        # print (f" {mBits_per_second_formatted} mBits/s")

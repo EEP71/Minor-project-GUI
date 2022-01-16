@@ -22,22 +22,60 @@ class test_SpectrumAnalyser(unittest.TestCase):
         else:
             self.assertEqual(1, 2, "Not connected to the right devide, or not the right firmware on the Pico")
         self.assertEqual(1, how_many_found, "Multiple RPi Pico's are connected. Not allowed for this test!")
+        value_to_set = 500
+        expected_value = f"Pico toolbox confirms that the ADC capture depth is set to: {value_to_set}"
+        real_value = pico.set_setting(SettingsSelector.set_adc_capture_depth, value_to_set)
+        self.assertEqual(expected_value, real_value, "Test init failed")
+        value_to_set = 500000
+        expected_value = f"Pico toolbox confirms that the ADC sample rate is set to: {value_to_set}"
+        real_value = pico.set_setting(SettingsSelector.set_adc_sample_rate, pico._sample_rate_to_clock_devide(value_to_set))
+        self.assertEqual(expected_value, real_value, "Test init failed")
 
     def test_get_bw_high_enough(self):
         global pico
-        pico.set_setting(SettingsSelector.set_adc_capture_depth, 500000)
-        clock_devide = pico.get_setting(SettingsSelector.get_adc_sample_rate)
-        sample_rate = pico._clock_devide_to_sample_rate(clock_devide)
-        self.assertGreater(sample_rate, 400000, "Bandwith is not high enough")
+        value_to_set = 500000
+        expected_value = f"Pico toolbox confirms that the ADC sample rate is set to: {value_to_set}"
+        real_value = pico.set_setting(SettingsSelector.set_adc_sample_rate, pico._sample_rate_to_clock_devide(value_to_set))
+        self.assertEqual(expected_value, real_value, "Test init failed")
+        expected_value = 400000 // 2
+        real_value = pico.get_setting(SettingsSelector.get_adc_sample_rate)
+        real_value = pico._clock_devide_to_sample_rate(real_value) // 2
+        self.assertGreater(real_value, expected_value)
 
-    def test_sample_speed(self):
+    def test_sample_speed_high_enough(self):
         global pico
-        expected_value = 960
-        sample_rate = pico.get_setting(SettingsSelector.get_adc_sample_rate)
-        self.assertEqual(1, 1)
+        value_to_set = 500000
+        expected_value = f"Pico toolbox confirms that the ADC sample rate is set to: {value_to_set}"
+        real_value = pico.set_setting(SettingsSelector.set_adc_sample_rate, pico._sample_rate_to_clock_devide(value_to_set))
+        self.assertEqual(expected_value, real_value, "Test init failed")
+        expected_value = 499999
+        real_value = pico.get_setting(SettingsSelector.get_adc_sample_rate)
+        real_value = pico._clock_devide_to_sample_rate(real_value)
+        self.assertGreater(real_value, expected_value)
 
-    def test_resolution(self):
+    def test_resolution_fast_reading_res_50(self):
         global pico
-        expected_value = 960
-        sample_rate = pico.get_setting(SettingsSelector.get_adc_sample_rate)
-        self.assertEqual(1, 1)
+        value_to_set_1 = 50000
+        expected_value = f"Pico toolbox confirms that the ADC sample rate is set to: {value_to_set_1}"
+        sample_rate = pico.set_setting(SettingsSelector.set_adc_sample_rate, pico._sample_rate_to_clock_devide(value_to_set_1))
+        self.assertEqual(expected_value, sample_rate, "Test init failed")
+        value_to_set_2 = 1000
+        expected_value = f"Pico toolbox confirms that the ADC capture depth is set to: {value_to_set_2}"
+        capture_depth = pico.set_setting(SettingsSelector.set_adc_capture_depth, value_to_set_2)
+        self.assertEqual(expected_value, capture_depth, "Test init failed")
+        resolution = value_to_set_1 // value_to_set_2
+        self.assertLess(resolution, 51)
+
+    def test_resolution_slow_reading_res_10(self):
+        global pico
+        value_to_set_1 = 25000
+        expected_value = f"Pico toolbox confirms that the ADC sample rate is set to: {value_to_set_1}"
+        sample_rate = pico.set_setting(SettingsSelector.set_adc_sample_rate, pico._sample_rate_to_clock_devide(value_to_set_1))
+        self.assertEqual(expected_value, sample_rate, "Test init failed")
+        value_to_set_2 = 2500
+        expected_value = f"Pico toolbox confirms that the ADC capture depth is set to: {value_to_set_2}"
+        capture_depth = pico.set_setting(SettingsSelector.set_adc_capture_depth, value_to_set_2)
+        self.assertEqual(expected_value, capture_depth, "Test init failed")
+        resolution = value_to_set_1 // value_to_set_2
+        self.assertLess(resolution, 11)
+

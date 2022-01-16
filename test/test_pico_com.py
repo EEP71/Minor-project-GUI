@@ -43,11 +43,20 @@ class Test_PicoCom(unittest.TestCase):
 
     def test_get_adc_capture_depth(self):
         global pico
+        value_to_set = 500
+        expected_value = f"Pico toolbox confirms that the ADC capture depth is set to: {value_to_set}"
+        capture_depth = pico.set_setting(SettingsSelector.set_adc_capture_depth, value_to_set)
+        self.assertEqual(expected_value, capture_depth, "Test init failed")
         expected_value = "500"
         real_value = pico.get_setting(SettingsSelector.get_adc_capture_depth)
         self.assertEqual(expected_value, real_value)
+
     def test_get_adc_sample_rate(self):
         global pico
+        value_to_set_1 = 50000
+        expected_value = f"Pico toolbox confirms that the ADC sample rate is set to: {value_to_set_1}"
+        sample_rate = pico.set_setting(SettingsSelector.set_adc_sample_rate, pico._sample_rate_to_clock_devide(value_to_set_1))
+        self.assertEqual(expected_value, sample_rate, "Test init failed")
         expected_value = 960
         real_value = pico.get_setting(SettingsSelector.get_adc_sample_rate)
         self.assertEqual(expected_value, real_value)
